@@ -14,23 +14,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
@@ -51,23 +46,21 @@ import com.example.myapplication.ui.screens.SettingsScreen
 import com.example.myapplication.ui.theme.Pink40
 import kotlinx.coroutines.launch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.Blue
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.text.font.FontStyle
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.myapplication.ui.screens.ShopScreens
-import com.example.myapplication.ui.theme.White
+import com.example.myapplication.ui.topbar.HomeTopBar
+import com.example.myapplication.ui.topbar.OrderTopBar
+import com.example.myapplication.ui.topbar.SettingsTopBar
+import com.example.myapplication.ui.topbar.ShopTopBar
+import com.example.myapplication.ui.topbar.UsersTopBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -75,6 +68,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
 
     val title = remember{mutableStateOf("Home")}
     val navController = rememberNavController()
+    val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue= DrawerValue.Closed)
 
@@ -106,7 +100,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                                 )
                         }
                     }
-                  Divider()
+                  HorizontalDivider(color = Transparent,modifier= Modifier.padding(top=5.dp, bottom=5.dp))
                   NavigationDrawerItem(label = { Text(text="Home", color = Pink40) },
                       selected = false,
                       onClick = {
@@ -163,7 +157,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
     ) {
         Scaffold(
                 topBar = {
-                    TopBar(drawerState = drawerState, title)
+                    TopBar(drawerState = drawerState, title, currentDestination)
                 }
             ){
                 NavHost(navController = navController, startDestination = Screens.HOME.name, modifier = Modifier.padding(it)) {
@@ -176,9 +170,6 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                     composable(Screens.SETTINGS.name){
                         SettingsScreen(title)
                     }
-                    composable(Screens.ORDER.name){
-                        OrderScreen(title)
-                    }
                     composable(Screens.SHOP.name){
                         ShopScreens(title)
                     }
@@ -187,11 +178,10 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(drawerState: DrawerState, title: MutableState<String>){
+fun TopBar(drawerState: DrawerState, title: MutableState<String>, currentDestination: String?){
 
-    var searchQuery by remember { mutableStateOf("") }
+    //var searchQuery by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
     Box(modifier = Modifier.padding(5.dp)) {
@@ -211,7 +201,9 @@ fun TopBar(drawerState: DrawerState, title: MutableState<String>){
                     imageVector = Icons.Default.Menu,
                     contentDescription = "Hamburger Icon",
                     tint = Black,
-                    modifier = Modifier.padding(top = 5.dp).size(30.dp)
+                    modifier = Modifier
+                        .padding(top = 5.dp)
+                        .size(30.dp)
                 )
             }
             Spacer(modifier=Modifier.size(4.dp))
@@ -223,6 +215,24 @@ fun TopBar(drawerState: DrawerState, title: MutableState<String>){
                 modifier = Modifier.padding(top = 5.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
+            when(currentDestination){
+                Screens.HOME.name -> {
+                    HomeTopBar()
+                }
+                Screens.ORDER.name -> {
+                    OrderTopBar()
+                }
+                Screens.SHOP.name -> {
+                    ShopTopBar()
+                }
+                Screens.SETTINGS.name -> {
+                    SettingsTopBar()
+                }
+                Screens.USER.name -> {
+                    UsersTopBar()
+                }
+            }
+            /*
             TextField(
                 value = searchQuery,
                 onValueChange = {searchQuery=it},
@@ -245,7 +255,10 @@ fun TopBar(drawerState: DrawerState, title: MutableState<String>){
                 modifier = Modifier
                     .weight(4f)
                     .padding(top = 5.dp)
-                    .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(10.dp)),
+                    .background(
+                        MaterialTheme.colorScheme.surface,
+                        shape = RoundedCornerShape(10.dp)
+                    ),
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = DarkGray,
                     focusedIndicatorColor = Transparent,
@@ -253,7 +266,7 @@ fun TopBar(drawerState: DrawerState, title: MutableState<String>){
                     disabledIndicatorColor = Transparent
                 ),
                 shape = RoundedCornerShape(10.dp) // Change this to the desired shape
-            )
+            )*/
         }
     }
 }

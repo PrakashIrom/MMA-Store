@@ -7,5 +7,7 @@ enum class Screens {
     WOMEN,
     SETTINGS,
     KIDS,
-    SHOP
+    SHOP,
+    USER,
+    ALL
 }
