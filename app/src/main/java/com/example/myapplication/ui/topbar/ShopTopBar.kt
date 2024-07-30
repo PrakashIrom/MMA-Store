@@ -1,7 +1,6 @@
 package com.example.myapplication.ui.topbar
 
 import androidx.compose.foundation.background
-//import androidx.compose.foundation.layout.FlowColumnScopeInstance.weight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,7 +47,6 @@ fun ShopTopBar(){
         },
         singleLine = true,
         modifier = Modifier
-            //.weight(4f)
             .padding(top = 5.dp)
             .background(
                 MaterialTheme.colorScheme.surface,
