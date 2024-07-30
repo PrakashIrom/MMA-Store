@@ -9,30 +9,34 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-sealed interface UIApparelState{
-    object Loading: UIApparelState
-    object Error: UIApparelState
-    data class Success(val datas: List<Apparel>): UIApparelState
+sealed interface UIApparelState {
+    object Loading : UIApparelState
+    object Error : UIApparelState
+    data class Success(val datas: List<Apparel>) : UIApparelState
 }
 
-class ApparelViewModel: ViewModel() {
+class ApparelViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow<UIApparelState>(UIApparelState.Loading)
     val uiState: StateFlow<UIApparelState> = _uiState
 
-    fun getApparels(){
+    init {
+        getApparels()
+    }
+
+    private fun getApparels() {
         viewModelScope.launch {
             _uiState.value = try {
                 val response = Api.retrofitService.getAllApparels()
-                UIApparelState.Success(response)
+                if (response.isNotEmpty()) {
+                    UIApparelState.Success(response)
+                } else {
+                    UIApparelState.Error // Handle empty response case if needed
+                }
             } catch (e: Exception) {
                 Log.e("ApparelError", e.message.toString())
                 UIApparelState.Error
             }
         }
-    }
-
-    init{
-        getApparels()
     }
 }

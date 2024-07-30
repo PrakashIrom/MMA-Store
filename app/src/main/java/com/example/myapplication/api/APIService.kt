@@ -7,7 +7,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.http.GET
 
-const val BASE_URL = "http://192.168.0.122:8080"
+const val BASE_URL = "http://192.168.0.123:8080"
 
 interface APIService {
     @GET("/all")
@@ -20,7 +20,7 @@ interface APIService {
     suspend fun getWomenApparels():List<Apparel>
 }
 
-val retrofit = Retrofit
+val retrofit: Retrofit = Retrofit
     .Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
