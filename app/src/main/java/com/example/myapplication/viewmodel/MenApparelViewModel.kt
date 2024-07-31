@@ -31,7 +31,6 @@ class MenApparelViewModel: ViewModel() {
             }
         }
     }
-
     init{
         getMenApparels()
     }

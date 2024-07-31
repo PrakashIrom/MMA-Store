@@ -26,6 +26,9 @@ import com.example.myapplication.viewmodel.UIApparelState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.myapplication.model.data.Apparel
+import com.example.myapplication.ui.theme.DarkGray
+import com.example.myapplication.ui.theme.DarkGreen
+import com.example.myapplication.ui.theme.Red600
 
 @Composable
 fun AllPants(viewModel: ApparelViewModel = viewModel()){
@@ -43,6 +46,7 @@ fun AllPants(viewModel: ApparelViewModel = viewModel()){
         is UIApparelState.Loading -> {
 
         }
+
     }
 }
 
@@ -62,7 +66,14 @@ fun ShowItems(items: List<Apparel>){
                             .fillMaxWidth()
                             .background(shape = RoundedCornerShape(10.dp), color = Color.DarkGray)
                     )
+                    Text(text =  if(item.quantity=="SOLD") "${item.quantity} OUT" else "IN ${item.quantity}",
+                        color = if(item.quantity=="SOLD") Red600 else DarkGreen,
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Italic,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
                     Text(text = item.name,
+                        color = DarkGray,
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
                         modifier = Modifier.padding(horizontal = 8.dp)

@@ -65,7 +65,7 @@ fun ShopScreens(title: MutableState<String>){
                     navController.navigate(Screens.KIDS.name)}
             )
         }
-        HorizontalDivider(color = Color.Gray,modifier=Modifier.padding(top=5.dp, bottom=5.dp))
+        HorizontalDivider(color = Color.Blue,modifier=Modifier.padding(top=5.dp, bottom=5.dp))
         NavHost(navController = navController, startDestination = Screens.ALL.name){
             composable(Screens.ALL.name){
                 AllPants()

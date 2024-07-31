@@ -181,7 +181,6 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
 @Composable
 fun TopBar(drawerState: DrawerState, title: MutableState<String>, currentDestination: String?){
 
-    //var searchQuery by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
     Box(modifier = Modifier.padding(5.dp)) {
@@ -232,41 +231,6 @@ fun TopBar(drawerState: DrawerState, title: MutableState<String>, currentDestina
                     UsersTopBar()
                 }
             }
-            /*
-            TextField(
-                value = searchQuery,
-                onValueChange = {searchQuery=it},
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search Icon",
-                        tint = Gray
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = "Search",
-                        fontSize = 16.sp,
-                        color = Gray,
-                        modifier=Modifier.wrapContentSize()
-                    )
-                },
-                singleLine = true,
-                modifier = Modifier
-                    .weight(4f)
-                    .padding(top = 5.dp)
-                    .background(
-                        MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(10.dp)
-                    ),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = DarkGray,
-                    focusedIndicatorColor = Transparent,
-                    unfocusedIndicatorColor = Transparent,
-                    disabledIndicatorColor = Transparent
-                ),
-                shape = RoundedCornerShape(10.dp) // Change this to the desired shape
-            )*/
         }
     }
 }

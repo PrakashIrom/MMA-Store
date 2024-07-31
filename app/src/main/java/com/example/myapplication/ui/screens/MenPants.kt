@@ -26,6 +26,10 @@ import com.example.myapplication.viewmodel.UIMenState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.myapplication.model.data.Apparel
+import com.example.myapplication.ui.theme.DarkGreen
+import com.example.myapplication.ui.theme.LightGreen
+import com.example.myapplication.ui.theme.PurpleGrey40
+import com.example.myapplication.ui.theme.Red600
 
 @Composable
 fun MenPants(viewModel: MenApparelViewModel = viewModel()){
@@ -59,6 +63,12 @@ fun ShowMenPants(items: List<Apparel>){
                             .height(180.dp)
                             .fillMaxWidth()
                             .background(shape = RoundedCornerShape(10.dp), color = Color.DarkGray)
+                    )
+                    Text(text =  if(item.quantity=="SOLD") "${item.quantity} OUT" else "IN ${item.quantity}",
+                        color = if(item.quantity=="SOLD") Red600 else DarkGreen,
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Italic,
+                        modifier = Modifier.padding(horizontal = 8.dp)
                     )
                     Text(text = item.name,
                         fontWeight = FontWeight.Bold,

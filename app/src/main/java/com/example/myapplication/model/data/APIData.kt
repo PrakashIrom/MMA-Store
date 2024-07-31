@@ -7,5 +7,6 @@ data class Apparel(
         val name: String,
         val imgUri: String,
         val price: Int,
-        val gender: String
+        val gender: String,
+        val quantity: String
     )
