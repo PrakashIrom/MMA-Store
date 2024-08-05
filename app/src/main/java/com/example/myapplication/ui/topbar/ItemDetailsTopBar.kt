@@ -22,9 +22,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.myapplication.ui.navigationdrawer.Screens
 
 @Composable
-fun UsersTopBar(navController: NavHostController, title: MutableState<String>){
+fun ItemDetailsTopBar(navController: NavHostController, clickState: MutableState<Boolean>, selectedCategory: MutableState<String>){
+
+   // if(selectedCategory.value == Screens.HOME.name)
     Box(modifier = Modifier.padding(5.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -33,7 +36,8 @@ fun UsersTopBar(navController: NavHostController, title: MutableState<String>){
         ) {
             IconButton(
                 onClick = {
-                    navController.navigateUp()
+                    clickState.value = false
+                    navController.navigate(selectedCategory.value)
                 }
             ) {
                 Icon(
@@ -47,7 +51,7 @@ fun UsersTopBar(navController: NavHostController, title: MutableState<String>){
             }
             Spacer(modifier = Modifier.size(4.dp))
             Text(
-                text = title.value,
+                text = "",
                 fontWeight = FontWeight.SemiBold,
                 fontStyle = FontStyle.Italic,
                 fontSize = 20.sp,

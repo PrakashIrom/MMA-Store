@@ -47,14 +47,19 @@ import com.example.myapplication.ui.theme.Pink40
 import kotlinx.coroutines.launch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.myapplication.R
 import com.example.myapplication.ui.screens.ShopScreens
 import com.example.myapplication.ui.topbar.HomeTopBar
 import com.example.myapplication.ui.topbar.OrderTopBar
@@ -66,11 +71,15 @@ import com.example.myapplication.ui.topbar.UsersTopBar
 @Composable
 fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
 
+    var selectedCategory = remember { mutableStateOf(Screens.ALL.name) }
+    var clickState = remember{mutableStateOf(false)}
     val title = remember{mutableStateOf("Home")}
     val navController = rememberNavController()
+    val navControllerItemDetails = rememberNavController()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue= DrawerValue.Closed)
+    val search = remember{mutableStateOf("")}
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -107,9 +116,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                           coroutineScope.launch {
                               drawerState.close()
                           }
-                          navController.navigate(Screens.HOME.name){
-                              popUpTo(0)
-                          }
+                          navController.navigate(Screens.HOME.name)
                       },
                       icon = {Icon(imageVector = Icons.Default.Home, contentDescription = "Home")}
                       )
@@ -119,9 +126,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                           coroutineScope.launch {
                               drawerState.close()
                           }
-                          navController.navigate(Screens.SHOP.name){
-                              popUpTo(0)
-                          }
+                          navController.navigate(Screens.SHOP.name)
                       },
                       icon = {Icon(imageVector = Icons.Default.Star, contentDescription = "Home")}
                   )
@@ -131,11 +136,22 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                           coroutineScope.launch {
                               drawerState.close()
                           }
-                          navController.navigate(Screens.ORDER.name){
-                              popUpTo(0)
-                          }
+                          navController.navigate(Screens.ORDER.name)
                       },
                       icon = {Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Cart")}
+                  )
+                  NavigationDrawerItem(label = { Text(text="Bag", color = Pink40) },
+                      selected = false,
+                      onClick = {
+                          coroutineScope.launch {
+                              drawerState.close()
+                          }
+                          navController.navigate(Screens.BAG.name)
+                      },
+                          icon = { Icon(painter = painterResource(id = R.drawable.bag),
+                              contentDescription = "Bag",
+                              modifier = Modifier.size(23.dp)
+                              )}
                   )
                   NavigationDrawerItem(label = { Text(text="Settings", color = Pink40) },
                       selected = false,
@@ -143,11 +159,10 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                           coroutineScope.launch {
                               drawerState.close()
                           }
-                          navController.navigate(Screens.SETTINGS.name){
-                              popUpTo(0)
-                          }
+                          navController.navigate(Screens.SETTINGS.name)
                       },
-                      icon = {Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")}
+                      icon = {Icon(imageVector = Icons.Default.Settings,
+                          contentDescription = "Settings")}
                   )
               }
         },
@@ -157,7 +172,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
     ) {
         Scaffold(
                 topBar = {
-                    TopBar(drawerState = drawerState, title, currentDestination)
+                    TopBar(drawerState = drawerState, title, currentDestination, search, navController, clickState, selectedCategory, navControllerItemDetails)
                 }
             ){
                 NavHost(navController = navController, startDestination = Screens.HOME.name, modifier = Modifier.padding(it)) {
@@ -171,66 +186,39 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                         SettingsScreen(title)
                     }
                     composable(Screens.SHOP.name){
-                        ShopScreens(title)
+                        ShopScreens(title, search, clickState, selectedCategory, navControllerItemDetails)
                     }
+                    // have to add for user also
                 }
         }
     }
 }
 
 @Composable
-fun TopBar(drawerState: DrawerState, title: MutableState<String>, currentDestination: String?){
+fun TopBar(drawerState: DrawerState, title: MutableState<String>, currentDestination: String?,
+           search: MutableState<String>, navController: NavHostController, clickState: MutableState<Boolean>,
+           selectedCategory: MutableState<String>, navControllerItemDetails: NavHostController){
 
-    val scope = rememberCoroutineScope()
-
-    Box(modifier = Modifier.padding(5.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(
-                onClick = {
-                    scope.launch {
-                        drawerState.open()
-                    }
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Hamburger Icon",
-                    tint = Black,
-                    modifier = Modifier
-                        .padding(top = 5.dp)
-                        .size(30.dp)
-                )
+    when(currentDestination){
+        Screens.HOME.name ->
+            {
+                HomeTopBar(title=title, drawerState=drawerState)
             }
-            Spacer(modifier=Modifier.size(4.dp))
-            Text(
-                text = title.value,
-                fontWeight = FontWeight.SemiBold,
-                fontStyle = FontStyle.Italic,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(top = 5.dp)
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            when(currentDestination){
-                Screens.HOME.name -> {
-                    HomeTopBar()
-                }
-                Screens.ORDER.name -> {
-                    OrderTopBar()
-                }
-                Screens.SHOP.name -> {
-                    ShopTopBar()
-                }
-                Screens.SETTINGS.name -> {
-                    SettingsTopBar()
-                }
-                Screens.USER.name -> {
-                    UsersTopBar()
-                }
+        Screens.ORDER.name ->
+            {
+                OrderTopBar(navController, title)
             }
-        }
+        Screens.SHOP.name ->
+            {
+                ShopTopBar(search, drawerState, title, clickState, navControllerItemDetails, selectedCategory)
+            }
+        Screens.SETTINGS.name ->
+            {
+                SettingsTopBar(navController, title)
+            }
+        Screens.USER.name ->
+            {
+                UsersTopBar(navController, title)
+            }
     }
 }

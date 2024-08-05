@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class Apparel(
         val name: String,
         val imgUri: String,
-        val price: Int,
+        val price: String,
         val gender: String,
         val quantity: String
     )

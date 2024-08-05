@@ -9,5 +9,7 @@ enum class Screens {
     KIDS,
     SHOP,
     USER,
-    ALL
+    ALL,
+    DETAILS,
+    BAG
 }

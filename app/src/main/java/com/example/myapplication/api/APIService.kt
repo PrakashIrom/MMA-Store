@@ -7,7 +7,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.http.GET
 
-const val BASE_URL = "http://192.168.0.123:8080"
+const val BASE_URL = "http://192.168.0.107:8080"
 
 interface APIService {
     @GET("/all")
@@ -18,6 +18,9 @@ interface APIService {
 
     @GET("/women")
     suspend fun getWomenApparels():List<Apparel>
+
+    @GET("/kids")
+    suspend fun getKidsApparels():List<Apparel>
 }
 
 val retrofit: Retrofit = Retrofit

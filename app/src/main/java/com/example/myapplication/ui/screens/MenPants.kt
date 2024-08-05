@@ -1,8 +1,11 @@
 package com.example.myapplication.ui.screens
 
+import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -24,20 +28,23 @@ import androidx.compose.ui.unit.dp
 import com.example.myapplication.viewmodel.MenApparelViewModel
 import com.example.myapplication.viewmodel.UIMenState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.myapplication.model.data.Apparel
+import com.example.myapplication.ui.navigationdrawer.Screens
+import com.example.myapplication.ui.theme.Blue700
 import com.example.myapplication.ui.theme.DarkGreen
-import com.example.myapplication.ui.theme.LightGreen
-import com.example.myapplication.ui.theme.PurpleGrey40
 import com.example.myapplication.ui.theme.Red600
+import com.google.gson.Gson
 
 @Composable
-fun MenPants(viewModel: MenApparelViewModel = viewModel()){
+fun MenPants(viewModel: MenApparelViewModel = viewModel(), search: MutableState<String>,
+             navController: NavHostController, clickState: MutableState<Boolean>){
     val state by viewModel.uiState.collectAsState()
 
     when(val response = state){
         is UIMenState.Success -> {
-            ShowMenPants(response.datas)
+            ShowMenPants(response.datas, search, navController, clickState)
         }
         is UIMenState.Error -> {
 
@@ -49,11 +56,18 @@ fun MenPants(viewModel: MenApparelViewModel = viewModel()){
 }
 
 @Composable
-fun ShowMenPants(items: List<Apparel>){
+fun ShowMenPants(items: List<Apparel>, search: MutableState<String>, navController: NavHostController, clickState: MutableState<Boolean>){
+
+    val filtered = if(search.value.isNotEmpty()) items.filter{it.name.contains(search.value, ignoreCase = true)} else items
+
     Column {
         LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-            items(items) { item ->
-                Column(modifier = Modifier.padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally,
+            items(filtered) { item ->
+                Column(modifier = Modifier.padding(5.dp)
+                    .clickable{clickState.value = true
+                    val apparelJson = Uri.encode(Gson().toJson(item))
+                    navController.navigate("${Screens.DETAILS.name}/$apparelJson")}
+                    , horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     AsyncImage(model = item.imgUri,
@@ -73,6 +87,14 @@ fun ShowMenPants(items: List<Apparel>){
                     Text(text = item.name,
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                    Spacer(modifier=Modifier.padding(3.dp))
+                    Text(
+                        text = item.price,
+                        color = Blue700,
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Normal,
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                 }

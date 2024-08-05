@@ -17,68 +17,86 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.myapplication.model.data.Apparel
+import com.example.myapplication.ui.itemdetailscreen.ItemDetails
+import com.example.myapplication.ui.theme.DarkBlue
+import com.google.gson.Gson
 
 @Composable
-fun ShopScreens(title: MutableState<String>){
+fun ShopScreens(title: MutableState<String>, search: MutableState<String>,
+                clickState: MutableState<Boolean>, selectedCategory: MutableState<String>, navControllerItemDetails: NavHostController){
 
     title.value = "SHOP"
-    val navController = rememberNavController()
-    var selectedCategory by remember { mutableStateOf(Screens.ALL.name) }
+    //val navController = rememberNavController()
 
+    if(!clickState.value){
     Column {
         Row() {
             Text("All",
-                color = if(selectedCategory == Screens.ALL.name) Color.Blue else Color.Black,
-                fontWeight = if (selectedCategory == Screens.ALL.name) FontWeight.Bold else FontWeight.Normal,
+                color = if (selectedCategory.value == Screens.ALL.name) DarkBlue else Color.Black,
+                fontWeight = if (selectedCategory.value == Screens.ALL.name) FontWeight.Bold else FontWeight.Normal,
                 modifier = Modifier
                     .padding(start = 18.dp)
                     .clickable {
-                        selectedCategory = Screens.ALL.name
-                        navController.navigate(Screens.ALL.name)
+                        selectedCategory.value = Screens.ALL.name
+                        navControllerItemDetails.navigate(Screens.ALL.name)
                     }
-                )
+            )
             Text("Men",
-                color = if(selectedCategory == Screens.MEN.name) Color.Blue else Color.Black,
-                fontWeight = if (selectedCategory == Screens.MEN.name) FontWeight.Bold else FontWeight.Normal,
+                color = if (selectedCategory.value == Screens.MEN.name) DarkBlue else Color.Black,
+                fontWeight = if (selectedCategory.value == Screens.MEN.name) FontWeight.Bold else FontWeight.Normal,
                 modifier = Modifier.padding(start = 15.dp)
-                .clickable {
-                    selectedCategory = Screens.MEN.name
-                    navController.navigate(Screens.MEN.name) }
+                    .clickable {
+                        selectedCategory.value = Screens.MEN.name
+                        navControllerItemDetails.navigate(Screens.MEN.name)
+                    }
             )
             Text("Women",
-                color = if(selectedCategory == Screens.WOMEN.name) Color.Blue else Color.Black,
-                fontWeight = if (selectedCategory == Screens.WOMEN.name) FontWeight.Bold else FontWeight.Normal,
+                color = if (selectedCategory.value == Screens.WOMEN.name) DarkBlue else Color.Black,
+                fontWeight = if (selectedCategory.value == Screens.WOMEN.name) FontWeight.Bold else FontWeight.Normal,
                 modifier = Modifier.padding(start = 15.dp)
-                .clickable{
-                    selectedCategory = Screens.WOMEN.name
-                    navController.navigate(Screens.WOMEN.name)}
+                    .clickable {
+                        navControllerItemDetails.navigate(selectedCategory.value)
+                    }
             )
             Text("Kids",
-                color = if(selectedCategory == Screens.KIDS.name) Color.Blue else Color.Black,
-                fontWeight = if (selectedCategory == Screens.KIDS.name) FontWeight.Bold else FontWeight.Normal,
+                color = if (selectedCategory.value == Screens.KIDS.name) DarkBlue else Color.Black,
+                fontWeight = if (selectedCategory.value == Screens.KIDS.name) FontWeight.Bold else FontWeight.Normal,
                 modifier = Modifier.padding(start = 15.dp)
-                .clickable{
-                    selectedCategory = Screens.KIDS.name
-                    navController.navigate(Screens.KIDS.name)}
+                    .clickable {
+                        selectedCategory.value = Screens.KIDS.name
+                        navControllerItemDetails.navigate(Screens.KIDS.name)
+                    }
             )
         }
-        HorizontalDivider(color = Color.Blue,modifier=Modifier.padding(top=5.dp, bottom=5.dp))
-        NavHost(navController = navController, startDestination = Screens.ALL.name){
+        HorizontalDivider(color = DarkBlue, modifier = Modifier.padding(top = 5.dp, bottom = 5.dp))
+        NavHost(navController = navControllerItemDetails, startDestination = Screens.ALL.name){
             composable(Screens.ALL.name){
-                AllPants()
+                AllPants(search=search, navControllerItemDetails, clickState=clickState)
             }
             composable(Screens.MEN.name){
-                MenPants()
+                MenPants(search=search, navController = navControllerItemDetails, clickState=clickState)
             }
             composable(Screens.WOMEN.name){
-                WomenPants()
+                WomenPants(search=search, navController = navControllerItemDetails, clickState=clickState)
             }
             composable(Screens.KIDS.name){
-                KidsPants()
+                KidsPants(search=search, navControllerItemDetails, clickState=clickState)
+            }
+            composable(route = "${Screens.DETAILS.name}/{apparel}"
+                , arguments = listOf(navArgument("apparel"){type = NavType.StringType})
+            ){ backStackEntry ->
+                val apparelJson = backStackEntry.arguments?.getString("apparel")
+                val apparel = Gson().fromJson(apparelJson, Apparel::class.java)
+                ItemDetails(apparel = apparel, navController = navControllerItemDetails)
             }
         }
+    }
     }
 }
