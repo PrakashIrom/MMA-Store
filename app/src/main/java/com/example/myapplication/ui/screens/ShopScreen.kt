@@ -62,7 +62,8 @@ fun ShopScreens(title: MutableState<String>, search: MutableState<String>,
                 fontWeight = if (selectedCategory.value == Screens.WOMEN.name) FontWeight.Bold else FontWeight.Normal,
                 modifier = Modifier.padding(start = 15.dp)
                     .clickable {
-                        navControllerItemDetails.navigate(selectedCategory.value)
+                        selectedCategory.value = Screens.WOMEN.name
+                        navControllerItemDetails.navigate(Screens.WOMEN.name)
                     }
             )
             Text("Kids",

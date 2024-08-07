@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeTopBar(drawerState: DrawerState, title: MutableState<String>){
 
+    title.value = "Home"
     val scope = rememberCoroutineScope()
 
     Box(modifier = Modifier.padding(5.dp)) {

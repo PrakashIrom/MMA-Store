@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun OrderTopBar(navController: NavHostController, title: MutableState<String>){
 
+    title.value = "Orders"
     Box(modifier = Modifier.padding(5.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),

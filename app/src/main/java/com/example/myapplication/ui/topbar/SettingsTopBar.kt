@@ -26,6 +26,7 @@ import androidx.navigation.NavHostController
 @Composable
 fun SettingsTopBar(navController: NavHostController, title: MutableState<String>){
 
+    title.value = "Settings"
     Box(modifier = Modifier.padding(5.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),

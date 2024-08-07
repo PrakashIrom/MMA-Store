@@ -43,6 +43,7 @@ fun ShopTopBar(search: MutableState<String>, drawerState: DrawerState, title: Mu
                clickState: MutableState<Boolean>, navControllerItemDetails: NavHostController, selectedCategory: MutableState<String>
 ){
     val scope = rememberCoroutineScope()
+    title.value = "Shop"
 
     if(!clickState.value)
     Box(modifier = Modifier.padding(5.dp)) {
