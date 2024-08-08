@@ -42,13 +42,13 @@ import com.google.gson.Gson
 
 @Composable
 fun WomenPants(viewModel: WomenApparelViewModel = viewModel(), search: MutableState<String>,
-               navController: NavHostController, clickState: MutableState<Boolean>){
+               navController: NavHostController){
 
     val state by viewModel.uiState.collectAsState()
 
     when(val response = state){
         is UIWomenState.Success -> {
-            ShowWomenPants(response.datas, search, navController, clickState)
+            ShowWomenPants(response.datas, search, navController)
         }
         is UIWomenState.Error -> {
 
@@ -60,7 +60,7 @@ fun WomenPants(viewModel: WomenApparelViewModel = viewModel(), search: MutableSt
 }
 
 @Composable
-fun ShowWomenPants(items: List<Apparel>, search: MutableState<String>, navController: NavHostController, clickState: MutableState<Boolean>){
+fun ShowWomenPants(items: List<Apparel>, search: MutableState<String>, navController: NavHostController){
 
     val filtered = if(search.value.isNotEmpty()) items.filter{ it.name.contains(search.value, ignoreCase = true)} else items
 
@@ -68,7 +68,7 @@ fun ShowWomenPants(items: List<Apparel>, search: MutableState<String>, navContro
         LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             items(filtered) { item ->
                 Column(modifier = Modifier.padding(5.dp)
-                    .clickable {clickState.value = true
+                    .clickable {
                         val apparelJson = Uri.encode(Gson().toJson(item))
                         navController.navigate("${Screens.DETAILS.name}/$apparelJson")}
                     , horizontalAlignment = Alignment.CenterHorizontally,

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,19 +17,15 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.myapplication.ui.navigationdrawer.Screens
-import com.example.myapplication.ui.theme.MyApplicationTheme
 
 @Composable
-fun ItemDetailsTopBar(navController: NavHostController){
-
+fun BagTopBar(navController: NavHostController, title: MutableState<String>){
+    title.value = "Settings"
     Box(modifier = Modifier.padding(5.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -43,7 +38,7 @@ fun ItemDetailsTopBar(navController: NavHostController){
                 }
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Navigation Back Icon",
                     tint = Color.Black,
                     modifier = Modifier
@@ -53,7 +48,7 @@ fun ItemDetailsTopBar(navController: NavHostController){
             }
             Spacer(modifier = Modifier.size(4.dp))
             Text(
-                text = "",
+                text = title.value,
                 fontWeight = FontWeight.SemiBold,
                 fontStyle = FontStyle.Italic,
                 fontSize = 20.sp,
@@ -62,12 +57,5 @@ fun ItemDetailsTopBar(navController: NavHostController){
             Spacer(modifier = Modifier.weight(1f))
         }
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun ShowPreview(){
-    MyApplicationTheme() {
-        ItemDetailsTopBar(navController = NavHostController(LocalContext.current))
-    }
 }

@@ -47,35 +47,40 @@ import com.example.myapplication.ui.theme.Pink40
 import kotlinx.coroutines.launch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
 import com.example.myapplication.R
+import com.example.myapplication.model.data.Apparel
+import com.example.myapplication.ui.itemdetailscreen.ItemDetails
+import com.example.myapplication.ui.screens.BagScreen
+import com.example.myapplication.ui.screens.KidsPants
+import com.example.myapplication.ui.screens.MenPants
 import com.example.myapplication.ui.screens.ShopScreens
+import com.example.myapplication.ui.screens.WomenPants
+import com.example.myapplication.ui.topbar.BagTopBar
 import com.example.myapplication.ui.topbar.HomeTopBar
+import com.example.myapplication.ui.topbar.ItemDetailsTopBar
 import com.example.myapplication.ui.topbar.OrderTopBar
 import com.example.myapplication.ui.topbar.SettingsTopBar
 import com.example.myapplication.ui.topbar.ShopTopBar
 import com.example.myapplication.ui.topbar.UsersTopBar
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
 
-    var selectedCategory = remember { mutableStateOf(Screens.ALL.name) }
-    var clickState = remember{mutableStateOf(false)}
+    val selectedCategory = remember { mutableStateOf(Screens.SHOP.name) }
     val title = remember{mutableStateOf("Home")}
     val navController = rememberNavController()
-    val navControllerItemDetails = rememberNavController()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue= DrawerValue.Closed)
@@ -172,53 +177,76 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
     ) {
         Scaffold(
                 topBar = {
-                    TopBar(drawerState = drawerState, title, currentDestination, search, navController, clickState, selectedCategory, navControllerItemDetails)
+                    TopBar(drawerState = drawerState, title, currentDestination, search, navController, selectedCategory, scope = coroutineScope)
                 }
             ){
-                NavHost(navController = navController, startDestination = Screens.HOME.name, modifier = Modifier.padding(it)) {
-                    composable(Screens.HOME.name){
+            NavHost(navController = navController, startDestination = Screens.HOME.name, modifier = Modifier.padding(it)) {
+                composable(Screens.HOME.name){
                         HomeScreen(title)
-                    }
-                    composable(Screens.ORDER.name){
-                        OrderScreen(title)
-                    }
-                    composable(Screens.SETTINGS.name){
-                        SettingsScreen(title)
-                    }
-                    composable(Screens.SHOP.name){
-                        ShopScreens(title, search, clickState, selectedCategory, navControllerItemDetails)
-                    }
-                    // have to add for user also
                 }
+                composable(Screens.ORDER.name){
+                        OrderScreen(title)
+                }
+                composable(Screens.SETTINGS.name){
+                        SettingsScreen(title)
+                }
+                composable(Screens.SHOP.name){
+                        ShopScreens(title, search, navController)
+                }
+                composable(Screens.MEN.name){
+                    MenPants(search=search, navController = navController)
+                }
+                composable(Screens.WOMEN.name){
+                    WomenPants(search=search, navController = navController)
+                }
+                composable(Screens.KIDS.name){
+                    KidsPants(search=search, navController)
+                }
+                composable(route = "${Screens.DETAILS.name}/{apparel}"
+                    , arguments = listOf(navArgument("apparel"){type = NavType.StringType})
+                ){ backStackEntry ->
+                    val apparelJson = backStackEntry.arguments?.getString("apparel")
+                    val apparel = Gson().fromJson(apparelJson, Apparel::class.java)
+                    ItemDetails(apparel = apparel, navController = navController)
+                }
+                composable(Screens.BAG.name){
+                    BagScreen(title)
+                }
+                    // have to add for user also
+            }
         }
     }
 }
 
 @Composable
 fun TopBar(drawerState: DrawerState, title: MutableState<String>, currentDestination: String?,
-           search: MutableState<String>, navController: NavHostController, clickState: MutableState<Boolean>,
-           selectedCategory: MutableState<String>, navControllerItemDetails: NavHostController){
+           search: MutableState<String>, navController: NavHostController,
+           selectedCategory: MutableState<String>, scope: CoroutineScope){
 
-    when(currentDestination){
-        Screens.HOME.name ->
-            {
-                HomeTopBar(title=title, drawerState=drawerState)
-            }
-        Screens.ORDER.name ->
-            {
-                OrderTopBar(navController, title)
-            }
-        Screens.SHOP.name ->
-            {
-                ShopTopBar(search, drawerState, title, clickState, navControllerItemDetails, selectedCategory)
-            }
-        Screens.SETTINGS.name ->
-            {
-                SettingsTopBar(navController, title)
-            }
-        Screens.USER.name ->
-            {
-                UsersTopBar(navController, title)
-            }
+    when {
+        currentDestination == Screens.HOME.name -> {
+            HomeTopBar(title=title, drawerState=drawerState)
+        }
+        currentDestination == Screens.ORDER.name -> {
+            OrderTopBar(navController, title)
+        }
+        currentDestination == Screens.SHOP.name ||
+                currentDestination == Screens.MEN.name ||
+                currentDestination == Screens.WOMEN.name ||
+                currentDestination == Screens.KIDS.name -> {
+            ShopTopBar(search, drawerState, title, navController, selectedCategory, scope)
+        }
+        currentDestination == Screens.SETTINGS.name -> {
+            SettingsTopBar(navController, title)
+        }
+        currentDestination == Screens.USER.name -> {
+            UsersTopBar(navController, title)
+        }
+        currentDestination?.startsWith(Screens.DETAILS.name) == true -> {
+            ItemDetailsTopBar(navController = navController)
+        }
+        currentDestination == Screens.BAG.name -> {
+            BagTopBar(navController = navController, title)
+        }
     }
 }

@@ -39,12 +39,12 @@ import com.google.gson.Gson
 
 @Composable
 fun KidsPants(search: MutableState<String>, navController: NavHostController,
-              viewModel: KidsApparelViewModel=viewModel(), clickState: MutableState<Boolean>){
+              viewModel: KidsApparelViewModel=viewModel()){
     val state by viewModel.uiState.collectAsState()
 
     when(val response = state){
         is UIKidsState.Success -> {
-            ShowKidsPants(response.datas, search, navController, clickState)
+            ShowKidsPants(response.datas, search, navController)
         }
         is UIKidsState.Error -> {
 
@@ -56,7 +56,7 @@ fun KidsPants(search: MutableState<String>, navController: NavHostController,
 }
 
 @Composable
-fun ShowKidsPants(items: List<Apparel>, search: MutableState<String>, navController: NavHostController, clickState: MutableState<Boolean>){
+fun ShowKidsPants(items: List<Apparel>, search: MutableState<String>, navController: NavHostController){
 
     val filtered = if(search.value.isNotEmpty()) items.filter{it.name.contains(search.value, ignoreCase = true)} else items
 
@@ -65,7 +65,6 @@ fun ShowKidsPants(items: List<Apparel>, search: MutableState<String>, navControl
             items(filtered) { item ->
                 Column(modifier = Modifier.padding(5.dp)
                     .clickable {
-                        clickState.value = true
                         val apparelJson = Uri.encode(Gson().toJson(item))
                         navController.navigate("${Screens.DETAILS.name}/$apparelJson")}
                     , horizontalAlignment = Alignment.CenterHorizontally,
