@@ -5,5 +5,4 @@ import androidx.compose.runtime.MutableState
 
 @Composable
 fun SettingsScreen(title: MutableState<String>){
-    title.value = "SETTINGS"
 }

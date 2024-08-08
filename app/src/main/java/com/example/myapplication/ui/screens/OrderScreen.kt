@@ -5,5 +5,4 @@ import androidx.compose.runtime.MutableState
 
 @Composable
 fun OrderScreen(title: MutableState<String>){
-    title.value = "ORDERS"
 }

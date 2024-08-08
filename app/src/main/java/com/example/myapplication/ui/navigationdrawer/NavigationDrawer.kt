@@ -2,11 +2,8 @@ package com.example.myapplication.ui.navigationdrawer
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
@@ -25,7 +21,6 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
@@ -64,19 +59,21 @@ import com.example.myapplication.ui.screens.KidsPants
 import com.example.myapplication.ui.screens.MenPants
 import com.example.myapplication.ui.screens.ShopScreens
 import com.example.myapplication.ui.screens.WomenPants
-import com.example.myapplication.ui.topbar.BagTopBar
+import com.example.myapplication.ui.topbar.CommonTopBar
 import com.example.myapplication.ui.topbar.HomeTopBar
-import com.example.myapplication.ui.topbar.ItemDetailsTopBar
-import com.example.myapplication.ui.topbar.OrderTopBar
-import com.example.myapplication.ui.topbar.SettingsTopBar
 import com.example.myapplication.ui.topbar.ShopTopBar
-import com.example.myapplication.ui.topbar.UsersTopBar
+import com.example.myapplication.viewmodel.ApparelViewModel
+import com.example.myapplication.viewmodel.KidsApparelViewModel
+import com.example.myapplication.viewmodel.MenApparelViewModel
+import com.example.myapplication.viewmodel.WomenApparelViewModel
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
+fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize(), apparelViewModel: ApparelViewModel,
+menViewModel: MenApparelViewModel, womenViewModel: WomenApparelViewModel, kidsViewModel: KidsApparelViewModel
+){
 
     val selectedCategory = remember { mutableStateOf(Screens.SHOP.name) }
     val title = remember{mutableStateOf("Home")}
@@ -121,6 +118,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                           coroutineScope.launch {
                               drawerState.close()
                           }
+                          //title.value = "Home"
                           navController.navigate(Screens.HOME.name)
                       },
                       icon = {Icon(imageVector = Icons.Default.Home, contentDescription = "Home")}
@@ -131,6 +129,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                           coroutineScope.launch {
                               drawerState.close()
                           }
+                         // title.value = "Shop"
                           navController.navigate(Screens.SHOP.name)
                       },
                       icon = {Icon(imageVector = Icons.Default.Star, contentDescription = "Home")}
@@ -141,6 +140,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                           coroutineScope.launch {
                               drawerState.close()
                           }
+                         // title.value = "Orders"
                           navController.navigate(Screens.ORDER.name)
                       },
                       icon = {Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Cart")}
@@ -151,6 +151,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                           coroutineScope.launch {
                               drawerState.close()
                           }
+                         // title.value = "Bag"
                           navController.navigate(Screens.BAG.name)
                       },
                           icon = { Icon(painter = painterResource(id = R.drawable.bag),
@@ -164,6 +165,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                           coroutineScope.launch {
                               drawerState.close()
                           }
+                         // title.value = "Settings"
                           navController.navigate(Screens.SETTINGS.name)
                       },
                       icon = {Icon(imageVector = Icons.Default.Settings,
@@ -191,16 +193,16 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                         SettingsScreen(title)
                 }
                 composable(Screens.SHOP.name){
-                        ShopScreens(title, search, navController)
+                        ShopScreens(search, navController, apparelViewModel)
                 }
                 composable(Screens.MEN.name){
-                    MenPants(search=search, navController = navController)
+                    MenPants(search=search, navController = navController, menViewModel = menViewModel)
                 }
                 composable(Screens.WOMEN.name){
-                    WomenPants(search=search, navController = navController)
+                    WomenPants(search=search, navController = navController, womenViewModel = womenViewModel)
                 }
                 composable(Screens.KIDS.name){
-                    KidsPants(search=search, navController)
+                    KidsPants(search=search, navController, kidsViewModel)
                 }
                 composable(route = "${Screens.DETAILS.name}/{apparel}"
                     , arguments = listOf(navArgument("apparel"){type = NavType.StringType})
@@ -210,7 +212,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                     ItemDetails(apparel = apparel, navController = navController)
                 }
                 composable(Screens.BAG.name){
-                    BagScreen(title)
+                    BagScreen()
                 }
                     // have to add for user also
             }
@@ -223,30 +225,19 @@ fun TopBar(drawerState: DrawerState, title: MutableState<String>, currentDestina
            search: MutableState<String>, navController: NavHostController,
            selectedCategory: MutableState<String>, scope: CoroutineScope){
 
-    when {
-        currentDestination == Screens.HOME.name -> {
+    when (currentDestination) {
+        Screens.HOME.name -> {
+            title.value = "Home"
             HomeTopBar(title=title, drawerState=drawerState)
         }
-        currentDestination == Screens.ORDER.name -> {
-            OrderTopBar(navController, title)
-        }
-        currentDestination == Screens.SHOP.name ||
-                currentDestination == Screens.MEN.name ||
-                currentDestination == Screens.WOMEN.name ||
-                currentDestination == Screens.KIDS.name -> {
+        Screens.SHOP.name, Screens.MEN.name, Screens.WOMEN.name, Screens.KIDS.name -> {
+            title.value = "Shop"
             ShopTopBar(search, drawerState, title, navController, selectedCategory, scope)
         }
-        currentDestination == Screens.SETTINGS.name -> {
-            SettingsTopBar(navController, title)
-        }
-        currentDestination == Screens.USER.name -> {
-            UsersTopBar(navController, title)
-        }
-        currentDestination?.startsWith(Screens.DETAILS.name) == true -> {
-            ItemDetailsTopBar(navController = navController)
-        }
-        currentDestination == Screens.BAG.name -> {
-            BagTopBar(navController = navController, title)
+        Screens.SETTINGS.name, Screens.ORDER.name, Screens.BAG.name, Screens.DETAILS.name
+        -> {
+            title.value = currentDestination
+            CommonTopBar(navController, title)
         }
     }
 }

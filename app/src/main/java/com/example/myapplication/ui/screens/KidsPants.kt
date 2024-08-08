@@ -26,7 +26,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.viewmodel.KidsApparelViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.myapplication.model.data.Apparel
@@ -39,8 +38,8 @@ import com.google.gson.Gson
 
 @Composable
 fun KidsPants(search: MutableState<String>, navController: NavHostController,
-              viewModel: KidsApparelViewModel=viewModel()){
-    val state by viewModel.uiState.collectAsState()
+              kidsViewModel: KidsApparelViewModel){
+    val state by kidsViewModel.uiState.collectAsState()
 
     when(val response = state){
         is UIKidsState.Success -> {

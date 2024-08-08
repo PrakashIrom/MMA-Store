@@ -5,5 +5,4 @@ import androidx.compose.runtime.MutableState
 
 @Composable
 fun UserScreen(title: MutableState<String>){
-    title.value = "USER"
 }

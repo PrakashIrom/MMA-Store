@@ -51,11 +51,8 @@ import com.example.myapplication.viewmodel.UIApparelState
 import com.google.gson.Gson
 
 @Composable
-fun ShopScreens(title: MutableState<String>, search: MutableState<String>, navController: NavHostController, viewModel: ApparelViewModel = viewModel()){
+fun ShopScreens(search: MutableState<String>, navController: NavHostController, viewModel: ApparelViewModel){
 
-    title.value = "SHOP"
-    //val navController = rememberNavController()
-   // AllPants(search=search, navControllerItemDetails)
     val state by viewModel.uiState.collectAsState()
 
     when(val response = state){
@@ -72,7 +69,6 @@ fun ShopScreens(title: MutableState<String>, search: MutableState<String>, navCo
         }
 
     }
-
 }
 
 @Composable

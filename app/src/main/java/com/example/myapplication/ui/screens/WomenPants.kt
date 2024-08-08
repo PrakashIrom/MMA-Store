@@ -26,25 +26,21 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.viewmodel.WomenApparelViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.myapplication.model.data.Apparel
 import com.example.myapplication.ui.navigationdrawer.Screens
 import com.example.myapplication.ui.theme.Blue700
-import com.example.myapplication.ui.theme.DarkGray
 import com.example.myapplication.ui.theme.DarkGreen
-import com.example.myapplication.ui.theme.LightGreen
-import com.example.myapplication.ui.theme.PurpleGrey40
 import com.example.myapplication.ui.theme.Red600
 import com.example.myapplication.viewmodel.UIWomenState
 import com.google.gson.Gson
 
 @Composable
-fun WomenPants(viewModel: WomenApparelViewModel = viewModel(), search: MutableState<String>,
+fun WomenPants(womenViewModel: WomenApparelViewModel, search: MutableState<String>,
                navController: NavHostController){
 
-    val state by viewModel.uiState.collectAsState()
+    val state by womenViewModel.uiState.collectAsState()
 
     when(val response = state){
         is UIWomenState.Success -> {

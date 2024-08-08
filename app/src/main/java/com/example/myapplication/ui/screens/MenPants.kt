@@ -27,7 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.viewmodel.MenApparelViewModel
 import com.example.myapplication.viewmodel.UIMenState
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.myapplication.model.data.Apparel
@@ -38,9 +37,9 @@ import com.example.myapplication.ui.theme.Red600
 import com.google.gson.Gson
 
 @Composable
-fun MenPants(viewModel: MenApparelViewModel = viewModel(), search: MutableState<String>,
+fun MenPants(menViewModel: MenApparelViewModel, search: MutableState<String>,
              navController: NavHostController){
-    val state by viewModel.uiState.collectAsState()
+    val state by menViewModel.uiState.collectAsState()
 
     when(val response = state){
         is UIMenState.Success -> {

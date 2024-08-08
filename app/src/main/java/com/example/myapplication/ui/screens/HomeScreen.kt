@@ -5,7 +5,6 @@ import androidx.compose.runtime.MutableState
 
 @Composable
 fun HomeScreen(title: MutableState<String>){
-    title.value = "HOME"
 
 }
 

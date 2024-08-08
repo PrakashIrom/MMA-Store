@@ -28,7 +28,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,7 +48,6 @@ fun ShopTopBar(search: MutableState<String>, drawerState: DrawerState, title: Mu
                navController: NavHostController,
                selectedCategory: MutableState<String>, scope: CoroutineScope
 ){
-    title.value = "Shop"
 
         Column {
         Box(modifier = Modifier.padding(5.dp)) {
