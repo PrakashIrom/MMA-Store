@@ -118,7 +118,6 @@ menViewModel: MenApparelViewModel, womenViewModel: WomenApparelViewModel, kidsVi
                           coroutineScope.launch {
                               drawerState.close()
                           }
-                          //title.value = "Home"
                           navController.navigate(Screens.HOME.name)
                       },
                       icon = {Icon(imageVector = Icons.Default.Home, contentDescription = "Home")}
@@ -129,7 +128,6 @@ menViewModel: MenApparelViewModel, womenViewModel: WomenApparelViewModel, kidsVi
                           coroutineScope.launch {
                               drawerState.close()
                           }
-                         // title.value = "Shop"
                           navController.navigate(Screens.SHOP.name)
                       },
                       icon = {Icon(imageVector = Icons.Default.Star, contentDescription = "Home")}
@@ -140,7 +138,6 @@ menViewModel: MenApparelViewModel, womenViewModel: WomenApparelViewModel, kidsVi
                           coroutineScope.launch {
                               drawerState.close()
                           }
-                         // title.value = "Orders"
                           navController.navigate(Screens.ORDER.name)
                       },
                       icon = {Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Cart")}
@@ -151,7 +148,6 @@ menViewModel: MenApparelViewModel, womenViewModel: WomenApparelViewModel, kidsVi
                           coroutineScope.launch {
                               drawerState.close()
                           }
-                         // title.value = "Bag"
                           navController.navigate(Screens.BAG.name)
                       },
                           icon = { Icon(painter = painterResource(id = R.drawable.bag),
@@ -165,7 +161,6 @@ menViewModel: MenApparelViewModel, womenViewModel: WomenApparelViewModel, kidsVi
                           coroutineScope.launch {
                               drawerState.close()
                           }
-                         // title.value = "Settings"
                           navController.navigate(Screens.SETTINGS.name)
                       },
                       icon = {Icon(imageVector = Icons.Default.Settings,
@@ -240,4 +235,5 @@ fun TopBar(drawerState: DrawerState, title: MutableState<String>, currentDestina
             CommonTopBar(navController, title)
         }
     }
+
 }

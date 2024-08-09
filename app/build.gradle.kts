@@ -52,8 +52,11 @@ android {
 
 dependencies {
 
-    implementation("com.paypal.android:card-payments:1.5.0")
-    implementation ("com.google.code.gson:gson:2.8.8")
+    implementation("com.paypal.sdk:paypal-core:1.7.2")
+   // implementation("com.paypal.sdk:paypal-android-sdk:2.16.0")
+    implementation("com.paypal.android:paypal-web-payments:1.5.0")
+
+    implementation ("com.google.code.gson:gson:2.10.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
@@ -69,6 +72,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.appcompat)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
