@@ -14,8 +14,11 @@ singleTop or singleTask Modes: In these modes, if an instance of the activity is
 is called instead of creating a new instance.
 Deep Link Handling: When PayPal redirects to your app using a deep link, the new intent carries the payment information.
 onNewIntent allows you to handle this without restarting the activity.
-Data Processing: You can use the onNewIntent method to process the new intent data and continue the user flow seamlessly.*/
+Data Processing: You can use the onNewIntent method to process the new intent data and continue the user flow seamlessly.
+*/
 
+// client id = AbZcp1B-oG_q2qpxMoFJeoa5GC5m8Z7qIG4rmQmHLpqaNfmOAApdhAJy_lDByv1ec5IAAx4-TYXZpwFm
+// secret id = EOceiM9HThTMRZbFdsnk-nqwuHgW9mIkRkzA3hrrcXmHzdqAqzvGutKXjFA7_Yjctx1l1DjYAkw8IO8C
 
 class PaypalService : FragmentActivity() {
 
@@ -42,7 +45,8 @@ class PaypalService : FragmentActivity() {
         )
 
         payPalWebCheckoutClient.listener = object : PayPalWebCheckoutListener {
-            override fun onPayPalWebSuccess(result: PayPalWebCheckoutResult) {
+            override fun onPayPalWebSuccess(result: PayPalWebCheckoutResult)
+            {
                 // order was approved and is ready to be captured/authorized (see step 7)
             }
             override fun onPayPalWebFailure(error: PayPalSDKError) {
@@ -60,11 +64,12 @@ class PaypalService : FragmentActivity() {
     //When PayPal redirects the user back to your app after the web checkout, it uses a deep link to launch your activity
     // (or bring it to the foreground). The onNewIntent() function is where you would handle this deep link, extract the payment
     // result from the newIntent, and proceed accordingly (e.g., show a success message, update the order status, etc.).
-    override fun onNewIntent(newIntent: Intent) {
+
+    override fun onNewIntent(newIntent: Intent)
+    {
         super.onNewIntent(newIntent)
         intent = newIntent
     }
-
 
 }
 

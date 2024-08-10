@@ -52,8 +52,13 @@ android {
 
 dependencies {
 
+    //datastore
+    implementation ("androidx.datastore:datastore-preferences:1.1.1")
+    implementation ("androidx.datastore:datastore-core:1.1.1")
+
+
+    //paypal sdk
     implementation("com.paypal.sdk:paypal-core:1.7.2")
-   // implementation("com.paypal.sdk:paypal-android-sdk:2.16.0")
     implementation("com.paypal.android:paypal-web-payments:1.5.0")
 
     implementation ("com.google.code.gson:gson:2.10.1")
