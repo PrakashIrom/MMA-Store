@@ -22,5 +22,7 @@ class ShopApplication: Application() {
 
         API = Api.retrofitService
         userPreference = DataContainer(datastore)
+
     }
+
 }

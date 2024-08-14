@@ -60,6 +60,8 @@ dependencies {
     //paypal sdk
     implementation("com.paypal.sdk:paypal-core:1.7.2")
     implementation("com.paypal.android:paypal-web-payments:1.5.0")
+    // paypal button
+    implementation("com.paypal.android:payment-buttons:1.5.0")
 
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
