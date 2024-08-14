@@ -47,6 +47,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -71,8 +72,10 @@ import kotlinx.coroutines.CoroutineScope
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize(), apparelViewModel: ApparelViewModel,
-menViewModel: MenApparelViewModel, womenViewModel: WomenApparelViewModel, kidsViewModel: KidsApparelViewModel
+fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize(), apparelViewModel: ApparelViewModel=viewModel(factory = ApparelViewModel.Factory),
+menViewModel: MenApparelViewModel=viewModel(factory = MenApparelViewModel.Factory),
+                     womenViewModel: WomenApparelViewModel=viewModel(factory = WomenApparelViewModel.Factory),
+                     kidsViewModel: KidsApparelViewModel=viewModel(factory = KidsApparelViewModel.Factory)
 ){
 
     val selectedCategory = remember { mutableStateOf(Screens.SHOP.name) }

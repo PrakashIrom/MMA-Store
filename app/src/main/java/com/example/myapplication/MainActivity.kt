@@ -16,12 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                val apparelViewModel: ApparelViewModel = viewModel()
-                val menViewModel: MenApparelViewModel =viewModel()
-                val womenViewModel: WomenApparelViewModel =viewModel()
-                val kidsViewModel: KidsApparelViewModel =viewModel()
-                NavigationDrawer(apparelViewModel=apparelViewModel,menViewModel=menViewModel,
-                    womenViewModel=womenViewModel,kidsViewModel=kidsViewModel)
+                NavigationDrawer()
             }
         }
     }

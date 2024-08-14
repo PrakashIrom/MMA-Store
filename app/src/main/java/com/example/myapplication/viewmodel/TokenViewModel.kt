@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.myapplication.IDApplication
+import com.example.myapplication.ShopApplication
 import com.example.myapplication.api.CreateTokenApi
 import com.example.myapplication.model.data.AccessTokenResponse
 import com.example.myapplication.model.data.DataContainer
@@ -51,7 +51,7 @@ class TokenViewModel(private val userPreferences: DataContainer): ViewModel(){
     companion object{
         val Factory: ViewModelProvider.Factory = viewModelFactory{
             initializer{
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as IDApplication)
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as ShopApplication)
                 TokenViewModel(application.userPreference)
             }
         }
