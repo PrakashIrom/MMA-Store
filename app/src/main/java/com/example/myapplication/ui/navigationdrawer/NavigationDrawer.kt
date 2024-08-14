@@ -133,7 +133,7 @@ menViewModel: MenApparelViewModel=viewModel(factory = MenApparelViewModel.Factor
                           }
                           navController.navigate(Screens.SHOP.name)
                       },
-                      icon = {Icon(imageVector = Icons.Default.Star, contentDescription = "Home")}
+                      icon = {Icon(imageVector = Icons.Default.Star, contentDescription = "Shop")}
                   )
                   NavigationDrawerItem(label = { Text(text="Orders", color = Pink40) },
                       selected = false,
@@ -181,6 +181,7 @@ menViewModel: MenApparelViewModel=viewModel(factory = MenApparelViewModel.Factor
                 }
             ){
             NavHost(navController = navController, startDestination = Screens.HOME.name, modifier = Modifier.padding(it)) {
+
                 composable(Screens.HOME.name){
                         HomeScreen(title)
                 }
@@ -207,7 +208,7 @@ menViewModel: MenApparelViewModel=viewModel(factory = MenApparelViewModel.Factor
                 ){ backStackEntry ->
                     val apparelJson = backStackEntry.arguments?.getString("apparel")
                     val apparel = Gson().fromJson(apparelJson, Apparel::class.java)
-                    ItemDetails(apparel = apparel, navController = navController)
+                    ItemDetails(apparel = apparel, navController = navController, title)
                 }
                 composable(Screens.BAG.name){
                     BagScreen()
@@ -232,10 +233,13 @@ fun TopBar(drawerState: DrawerState, title: MutableState<String>, currentDestina
             title.value = "Shop"
             ShopTopBar(search, drawerState, title, navController, selectedCategory, scope)
         }
-        Screens.SETTINGS.name, Screens.ORDER.name, Screens.BAG.name, Screens.DETAILS.name
+        Screens.SETTINGS.name, Screens.ORDER.name, Screens.BAG.name
         -> {
             title.value = currentDestination
             CommonTopBar(navController, title)
+        }
+        else -> {
+            CommonTopBar(navController, title) //for item details screen
         }
     }
 

@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="man">Experience ultimate comfort and performance with our Men’s MMA Pants. Designed for intense training sessions, these pants feature a durable, lightweight fabric that ensures maximum mobility and breathability. The moisture-wicking technology keeps you dry and comfortable, while the reinforced stitching provides added durability. Perfect for grappling, sparring, and everyday workouts.</string>
+    <string name="woman">Our Women’s MMA Pants are crafted to provide a perfect blend of style and functionality. Made from high-quality, stretchable fabric, these pants offer a snug fit that moves with you. The breathable material and moisture-wicking properties keep you cool and dry during intense training sessions. With a sleek design and reinforced seams, these pants are ideal for both training and casual wear.</string>
+    <string name="kid">Keep your young fighters comfortable and protected with our Kids’ MMA Pants. These pants are made from soft, durable fabric that stands up to the rigors of training. The elastic waistband ensures a secure fit, while the breathable material keeps them cool and dry. Perfect for martial arts classes, these pants provide the flexibility and comfort needed for active kids.</string>
 </resources>

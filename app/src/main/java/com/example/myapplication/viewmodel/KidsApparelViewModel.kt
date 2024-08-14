@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.myapplication.ShopApplication
 import com.example.myapplication.api.APIService
-import com.example.myapplication.api.Api
 import com.example.myapplication.model.data.Apparel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

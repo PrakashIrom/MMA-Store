@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,11 +26,10 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun CommonTopBar(navController: NavHostController, title: MutableState<String>){
-    Box(modifier = Modifier.padding(5.dp)) {
+    Box{
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            //modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
                 onClick = {
@@ -37,7 +37,7 @@ fun CommonTopBar(navController: NavHostController, title: MutableState<String>){
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Navigation Back Icon",
                     tint = Color.Black,
                     modifier = Modifier
@@ -45,7 +45,7 @@ fun CommonTopBar(navController: NavHostController, title: MutableState<String>){
                         .size(30.dp)
                 )
             }
-            Spacer(modifier = Modifier.size(4.dp))
+            Spacer(modifier = Modifier.size(5.dp))
             Text(
                 text = title.value,
                 fontWeight = FontWeight.SemiBold,
@@ -53,7 +53,6 @@ fun CommonTopBar(navController: NavHostController, title: MutableState<String>){
                 fontSize = 20.sp,
                 modifier = Modifier.padding(top = 5.dp)
             )
-            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }

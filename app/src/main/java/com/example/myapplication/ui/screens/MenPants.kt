@@ -58,8 +58,8 @@ fun MenPants(menViewModel: MenApparelViewModel, search: MutableState<String>,
 fun ShowMenPants(items: List<Apparel>, search: MutableState<String>, navController: NavHostController){
 
     val filtered = if(search.value.isNotEmpty()) items.filter{it.name.contains(search.value, ignoreCase = true)} else items
+    // filtered is to show the search results in the search bar or else the whole items list
 
-    Column {
         LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             items(filtered) { item ->
                 Column(modifier = Modifier.padding(5.dp)
@@ -99,6 +99,5 @@ fun ShowMenPants(items: List<Apparel>, search: MutableState<String>, navControll
                 }
             }
         }
-    }
 }
 
