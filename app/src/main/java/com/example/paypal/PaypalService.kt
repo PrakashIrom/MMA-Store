@@ -17,21 +17,13 @@ onNewIntent allows you to handle this without restarting the activity.
 Data Processing: You can use the onNewIntent method to process the new intent data and continue the user flow seamlessly.
 */
 
-// client id = AbZcp1B-oG_q2qpxMoFJeoa5GC5m8Z7qIG4rmQmHLpqaNfmOAApdhAJy_lDByv1ec5IAAx4-TYXZpwFm
-// secret id = EOceiM9HThTMRZbFdsnk-nqwuHgW9mIkRkzA3hrrcXmHzdqAqzvGutKXjFA7_Yjctx1l1DjYAkw8IO8C
-
 class PaypalService : FragmentActivity() {
 
     private lateinit var config: CoreConfig
 
     val returnUrl = "my-paypal-scheme://return"
 
-    val payPalWebCheckoutClient = PayPalWebCheckoutClient(
-        this, //The activity provides context to the SDK, allowing it to access resources,
-        // display UI elements (like the web view for checkout), and interact with the Android system
-        config,
-        returnUrl,
-    )
+    lateinit var payPalWebCheckoutClient: PayPalWebCheckoutClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +34,13 @@ class PaypalService : FragmentActivity() {
             // It also associates the transactions and operations performed with your PayPal account.
             clientId = "AbZcp1B-oG_q2qpxMoFJeoa5GC5m8Z7qIG4rmQmHLpqaNfmOAApdhAJy_lDByv1ec5IAAx4-TYXZpwFm",
             environment = com.paypal.android.corepayments.Environment.SANDBOX, // or Environment.LIVE for production
+        )
+
+        payPalWebCheckoutClient = PayPalWebCheckoutClient(
+            this, //The activity provides context to the SDK, allowing it to access resources,
+            // display UI elements (like the web view for checkout), and interact with the Android system
+            config,
+            returnUrl,
         )
 
         payPalWebCheckoutClient.listener = object : PayPalWebCheckoutListener {
