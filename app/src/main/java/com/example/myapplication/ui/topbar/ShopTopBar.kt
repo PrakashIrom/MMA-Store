@@ -1,5 +1,11 @@
 package com.example.myapplication.ui.topbar
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,13 +13,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
@@ -23,16 +32,25 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontVariation.width
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -42,19 +60,16 @@ import com.example.myapplication.ui.theme.LightBlue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShopTopBar(search: MutableState<String>, drawerState: DrawerState, title: MutableState<String>,
                navController: NavHostController,
                selectedCategory: MutableState<String>, scope: CoroutineScope
 ){
-
         Column {
         Box(modifier = Modifier.padding(5.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
                 onClick = {
@@ -81,41 +96,7 @@ fun ShopTopBar(search: MutableState<String>, drawerState: DrawerState, title: Mu
                 modifier = Modifier.padding(top = 5.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
-            TextField(
-                value = search.value,
-                onValueChange = { search.value = it },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search Icon",
-                        tint = Color.Gray
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = "Search",
-                        fontSize = 16.sp,
-                        color = Color.Gray,
-                        modifier = Modifier.wrapContentSize()
-                    )
-                },
-                singleLine = true,
-                modifier = Modifier
-                    .padding(top = 5.dp)
-                    .background(
-                        MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(10.dp)
-                    )
-                    .width(250.dp)
-                    .height(50.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = LightBlue,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                ),
-                shape = RoundedCornerShape(10.dp)
-            )
+            SearchBarWithAnimation(search = search)
         }
         }
             Row() {
@@ -160,3 +141,57 @@ fun ShopTopBar(search: MutableState<String>, drawerState: DrawerState, title: Mu
             HorizontalDivider(color = DarkBlue, modifier = Modifier.padding(top = 5.dp, bottom = 5.dp))
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBarWithAnimation(search: MutableState<String>) {
+
+    var searchVisible by remember { mutableStateOf(false) }
+    var iconVisible by remember { mutableStateOf(true) }
+
+    if(iconVisible)
+    IconButton(
+        onClick = { searchVisible = !searchVisible
+        iconVisible = false
+        }
+    ) {
+        Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+    }
+        AnimatedVisibility(
+            visible = searchVisible,
+            enter = fadeIn() + expandHorizontally(expandFrom = Alignment.End), // Slide in from the right
+            exit = fadeOut() + shrinkHorizontally(shrinkTowards = Alignment.End), // Slide out to the right
+            modifier = Modifier
+                .widthIn(min = 300.dp, max = 400.dp)
+                .height(58.dp)
+        ) {
+            OutlinedTextField(
+                value = search.value,
+                onValueChange = { search.value = it },
+                label = { Text("Search") },
+                leadingIcon = {   IconButton(
+                    onClick = { searchVisible = !searchVisible
+                    iconVisible = true
+                    }
+                ) {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                }},
+                modifier = Modifier
+                    .padding(horizontal = 8.dp),
+                textStyle = TextStyle(
+                    color = Color.Black,
+                    fontSize = 16.sp
+                ),
+                singleLine = true,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedTextColor = Color.Black, // Text color
+                    cursorColor = Color.Black, // Cursor color
+                    focusedBorderColor = Color.Gray, // Border color when focused
+                    unfocusedBorderColor = Color.LightGray // Border color when unfocused
+                ),
+                shape = RoundedCornerShape(15.dp)
+            )
+        }
+}
+
+
