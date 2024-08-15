@@ -1,30 +1,35 @@
 package com.example.myapplication.ui.itemdetailscreen
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,10 +44,19 @@ import com.example.myapplication.R
 import com.example.myapplication.model.data.Apparel
 import com.example.myapplication.ui.navigationdrawer.Screens
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import kotlinx.coroutines.launch
+//import androidx.compose.material3.ModalBottomSheetState
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemDetails(apparel: Apparel, navController: NavHostController, title: MutableState<String>){
+fun ItemDetails(apparel: Apparel, navController: NavHostController, title: MutableState<String>, size: MutableState<String>){
+
     title.value = apparel.name
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    //val size = remember {mutableStateOf("Select Size")}
+    val showBottomSheet = remember { mutableStateOf(false) }
 
     LazyColumn(){ item {
         Column( horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,7 +97,9 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
                     .padding(horizontal = 16.dp)  // Add padding if needed
             ) {
                 OutlinedButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { scope.launch{
+                        showBottomSheet.value = !showBottomSheet.value
+                    } },
                     modifier = Modifier
                         .align(Alignment.Center)  // Center the button within the Box
                         .fillMaxWidth()  // Button takes the full width
@@ -94,14 +110,14 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
                         modifier = Modifier.fillMaxWidth()  // Ensure Row takes the full width
                     ) {
                         Text(
-                            text = "Select Size",
+                            text = size.value,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.weight(1f)  // Allow text to take up remaining space
                         )
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowDown,
                             contentDescription = "Select Size",
-                            modifier = Modifier.size(24.dp)  // Adjust size as needed
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
@@ -113,9 +129,45 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
             {
              Text(text="Buy Now")
             }
-        }
+            if(showBottomSheet.value)
+            SelectSizeBottomSheet(size = size, sheetState = sheetState, showBottomSheet = showBottomSheet)
+         }
        }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SelectSizeBottomSheet(size: MutableState<String>, sheetState: SheetState, showBottomSheet: MutableState<Boolean>){
+
+    val sizes = listOf("Small", "Medium", "Large")
+
+    ModalBottomSheet(
+        sheetState=sheetState,
+        onDismissRequest = {!showBottomSheet.value}
+    ){
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            sizes.forEach { item_size ->
+                Text(
+                    text = item_size,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            size.value=item_size
+                            showBottomSheet.value = !showBottomSheet.value
+                        }
+                        .padding(16.dp)
+                )
+            }
+        }
+    }
+
 }
 
 @SuppressLint("UnrememberedMutableState")
@@ -126,6 +178,6 @@ fun PreviewItemDetails(){
         val apparel = Apparel("men", "shirt", "100", "male", "2")
         val nav = rememberNavController()
         val title = mutableStateOf("")
-        ItemDetails(apparel,nav,title)
+        ItemDetails(apparel,nav,title,mutableStateOf("hello"))
     }
 }

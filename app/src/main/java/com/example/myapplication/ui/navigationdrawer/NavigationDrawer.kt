@@ -85,6 +85,7 @@ menViewModel: MenApparelViewModel=viewModel(factory = MenApparelViewModel.Factor
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue= DrawerValue.Closed)
     val search = remember{mutableStateOf("")}
+    val size = remember{mutableStateOf("Select Size")}
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -208,7 +209,7 @@ menViewModel: MenApparelViewModel=viewModel(factory = MenApparelViewModel.Factor
                 ){ backStackEntry ->
                     val apparelJson = backStackEntry.arguments?.getString("apparel")
                     val apparel = Gson().fromJson(apparelJson, Apparel::class.java)
-                    ItemDetails(apparel = apparel, navController = navController, title)
+                    ItemDetails(apparel = apparel, navController = navController, title, size=size)
                 }
                 composable(Screens.BAG.name){
                     BagScreen()
