@@ -25,8 +25,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -170,10 +170,10 @@ fun SearchBarWithAnimation(search: MutableState<String>) {
                     fontSize = 16.sp
                 ),
                 singleLine = true,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedTextColor = Color.Black, // Text color
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.DarkGray, // Text color
                     cursorColor = Color.Black, // Cursor color
-                    focusedBorderColor = Color.Gray, // Border color when focused
+                    focusedBorderColor = Color.DarkGray, // Border color when focused
                     unfocusedBorderColor = Color.LightGray // Border color when unfocused
                 ),
                 shape = RoundedCornerShape(15.dp)
