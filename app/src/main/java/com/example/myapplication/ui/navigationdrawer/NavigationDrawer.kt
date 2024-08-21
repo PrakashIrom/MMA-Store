@@ -47,7 +47,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -63,20 +62,12 @@ import com.example.myapplication.ui.screens.WomenPants
 import com.example.myapplication.ui.topbar.CommonTopBar
 import com.example.myapplication.ui.topbar.HomeTopBar
 import com.example.myapplication.ui.topbar.ShopTopBar
-import com.example.myapplication.viewmodel.ApparelViewModel
-import com.example.myapplication.viewmodel.KidsApparelViewModel
-import com.example.myapplication.viewmodel.MenApparelViewModel
-import com.example.myapplication.viewmodel.WomenApparelViewModel
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize(), apparelViewModel: ApparelViewModel=viewModel(factory = ApparelViewModel.Factory),
-menViewModel: MenApparelViewModel=viewModel(factory = MenApparelViewModel.Factory),
-                     womenViewModel: WomenApparelViewModel=viewModel(factory = WomenApparelViewModel.Factory),
-                     kidsViewModel: KidsApparelViewModel=viewModel(factory = KidsApparelViewModel.Factory)
-){
+fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
 
     val selectedCategory = remember { mutableStateOf(Screens.SHOP.name) }
     val title = remember{mutableStateOf("Home")}
@@ -193,16 +184,16 @@ menViewModel: MenApparelViewModel=viewModel(factory = MenApparelViewModel.Factor
                         SettingsScreen(title)
                 }
                 composable(Screens.SHOP.name){
-                        ShopScreens(search, navController, apparelViewModel)
+                        ShopScreens(search, navController)
                 }
                 composable(Screens.MEN.name){
-                    MenPants(search=search, navController = navController, menViewModel = menViewModel)
+                    MenPants(search=search, navController = navController)
                 }
                 composable(Screens.WOMEN.name){
-                    WomenPants(search=search, navController = navController, womenViewModel = womenViewModel)
+                    WomenPants(search=search, navController = navController)
                 }
                 composable(Screens.KIDS.name){
-                    KidsPants(search=search, navController, kidsViewModel)
+                    KidsPants(search=search, navController)
                 }
                 composable(route = "${Screens.DETAILS.name}/{apparel}"
                     , arguments = listOf(navArgument("apparel"){type = NavType.StringType})

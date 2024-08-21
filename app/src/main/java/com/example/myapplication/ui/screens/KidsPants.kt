@@ -25,7 +25,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.viewmodel.KidsApparelViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.myapplication.model.data.Apparel
@@ -33,13 +32,17 @@ import com.example.myapplication.ui.navigationdrawer.Screens
 import com.example.myapplication.ui.theme.Blue700
 import com.example.myapplication.ui.theme.DarkGreen
 import com.example.myapplication.ui.theme.Red600
+import com.example.myapplication.viewmodel.ApparelViewModel
 import com.example.myapplication.viewmodel.UIKidsState
 import com.google.gson.Gson
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun KidsPants(search: MutableState<String>, navController: NavHostController,
-              kidsViewModel: KidsApparelViewModel){
-    val state by kidsViewModel.uiState.collectAsState()
+fun KidsPants(
+    search: MutableState<String>, navController: NavHostController,
+    kidsViewModel: ApparelViewModel = koinViewModel(),
+){
+    val state by kidsViewModel.uiKidsState.collectAsState()
 
     when(val response = state){
         is UIKidsState.Success -> {
@@ -61,10 +64,12 @@ fun ShowKidsPants(items: List<Apparel>, search: MutableState<String>, navControl
 
         LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             items(filtered) { item ->
-                Column(modifier = Modifier.padding(5.dp)
+                Column(modifier = Modifier
+                    .padding(5.dp)
                     .clickable {
                         val apparelJson = Uri.encode(Gson().toJson(item))
-                        navController.navigate("${Screens.DETAILS.name}/$apparelJson")}
+                        navController.navigate("${Screens.DETAILS.name}/$apparelJson")
+                    }
                     , horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {

@@ -36,9 +36,10 @@ import com.example.myapplication.ui.theme.Red600
 import com.example.myapplication.viewmodel.ApparelViewModel
 import com.example.myapplication.viewmodel.UIApparelState
 import com.google.gson.Gson
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ShopScreens(search: MutableState<String>, navController: NavHostController, viewModel: ApparelViewModel){
+fun ShopScreens(search: MutableState<String>, navController: NavHostController, viewModel: ApparelViewModel = koinViewModel()){
 
     val state by viewModel.uiState.collectAsState()
 

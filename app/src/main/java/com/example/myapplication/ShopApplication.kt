@@ -6,8 +6,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.myapplication.api.APIService
-import com.example.myapplication.api.Api
+import com.example.myapplication.dependencyinjection.apiModule
 import com.example.myapplication.model.data.DataContainer
+import org.koin.core.context.GlobalContext.startKoin
 
 private const val PREFERENCE_NAME = "ClientSecretID"
 private val Context.datastore: DataStore<Preferences> by preferencesDataStore(name = PREFERENCE_NAME)
@@ -15,12 +16,14 @@ private val Context.datastore: DataStore<Preferences> by preferencesDataStore(na
 class ShopApplication: Application() {
 
     lateinit var userPreference: DataContainer
-    lateinit var API: APIService
 
     override fun onCreate() {
         super.onCreate()
 
-        API = Api.retrofitService
+        startKoin{
+            modules(apiModule)
+        }
+
         userPreference = DataContainer(datastore)
 
     }

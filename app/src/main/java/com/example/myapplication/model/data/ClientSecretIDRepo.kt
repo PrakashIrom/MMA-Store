@@ -38,7 +38,7 @@ class ClientSecretIDRepo(private val datastore: DataStore<Preferences>) {
         }
     }
 
-    suspend fun saveOrderId(id:OrderID){
+    suspend fun saveOrderId(id:OrderResponse){
         datastore.edit{
             preferences->
             preferences[ORDER_ID] = id.id

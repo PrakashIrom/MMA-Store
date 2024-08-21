@@ -25,7 +25,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.viewmodel.WomenApparelViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.myapplication.model.data.Apparel
@@ -33,14 +32,18 @@ import com.example.myapplication.ui.navigationdrawer.Screens
 import com.example.myapplication.ui.theme.Blue700
 import com.example.myapplication.ui.theme.DarkGreen
 import com.example.myapplication.ui.theme.Red600
+import com.example.myapplication.viewmodel.ApparelViewModel
 import com.example.myapplication.viewmodel.UIWomenState
 import com.google.gson.Gson
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun WomenPants(womenViewModel: WomenApparelViewModel, search: MutableState<String>,
-               navController: NavHostController){
+fun WomenPants(
+    womenViewModel: ApparelViewModel = koinViewModel(), search: MutableState<String>,
+    navController: NavHostController,
+){
 
-    val state by womenViewModel.uiState.collectAsState()
+    val state by womenViewModel.uiWomenState.collectAsState()
 
     when(val response = state){
         is UIWomenState.Success -> {

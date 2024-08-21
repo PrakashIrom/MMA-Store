@@ -51,7 +51,6 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
     title.value = apparel.name
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    //val size = remember {mutableStateOf("Select Size")}
     val showBottomSheet = remember { mutableStateOf(false) }
 
     LazyColumn(){ item {

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PayPalOrderRequest(
     @SerializedName("intent")
-    val intent: String,  // CAPTURE or AUTHORIZE
+    val intent: String = "CAPTURE",  // CAPTURE or AUTHORIZE
 
     @SerializedName("purchase_units")
     val purchaseUnits: List<PurchaseUnit>

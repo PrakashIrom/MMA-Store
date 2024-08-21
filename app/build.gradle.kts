@@ -56,6 +56,11 @@ dependencies {
     implementation ("androidx.datastore:datastore-preferences:1.1.1")
     implementation ("androidx.datastore:datastore-core:1.1.1")
 
+    //koin
+    implementation(platform("io.insert-koin:koin-bom:3.5.0"))
+    implementation("io.insert-koin:koin-core")
+    implementation("io.insert-koin:koin-android")
+    implementation("io.insert-koin:koin-androidx-compose")
 
     //paypal sdk
     implementation("com.paypal.sdk:paypal-core:1.7.2")
