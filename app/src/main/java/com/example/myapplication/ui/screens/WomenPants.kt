@@ -62,7 +62,6 @@ fun WomenPants(
 fun ShowWomenPants(items: List<Apparel>, search: MutableState<String>, navController: NavHostController){
 
     val filtered = if(search.value.isNotEmpty()) items.filter{ it.name.contains(search.value, ignoreCase = true)} else items
-
         LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             items(filtered) { item ->
                 Column(modifier = Modifier.padding(5.dp)

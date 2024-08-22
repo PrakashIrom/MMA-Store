@@ -16,7 +16,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-sealed interface TokenResponse{
+sealed interface TokenResponse
+{
     data class Success(val token: AccessTokenResponse): TokenResponse
     object Failure: TokenResponse
     object Loading: TokenResponse

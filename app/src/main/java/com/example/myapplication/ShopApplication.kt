@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.myapplication.api.APIService
 import com.example.myapplication.dependencyinjection.apiModule
 import com.example.myapplication.model.data.DataContainer
 import org.koin.core.context.GlobalContext.startKoin
@@ -23,7 +22,6 @@ class ShopApplication: Application() {
         startKoin{
             modules(apiModule)
         }
-
         userPreference = DataContainer(datastore)
 
     }

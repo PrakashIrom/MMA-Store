@@ -43,15 +43,14 @@ import com.example.myapplication.ui.navigationdrawer.Screens
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemDetails(apparel: Apparel, navController: NavHostController, title: MutableState<String>, size: MutableState<String>){
+fun ItemDetails(apparel: Apparel, navController: NavHostController, title: MutableState<String>, selected:MutableState<MutableMap<Apparel,String>>){
 
     title.value = apparel.name
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
     val showBottomSheet = remember { mutableStateOf(false) }
+    val map = selected.value
 
     LazyColumn(){ item {
         Column( horizontalAlignment = Alignment.CenterHorizontally,
@@ -92,9 +91,9 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
                     .padding(horizontal = 16.dp)  // Add padding if needed
             ) {
                 OutlinedButton(
-                    onClick = { scope.launch{
-                        showBottomSheet.value = !showBottomSheet.value
-                    } },
+                    onClick = {
+                        showBottomSheet.value = true
+                     },
                     modifier = Modifier
                         .align(Alignment.Center)  // Center the button within the Box
                         .fillMaxWidth()  // Button takes the full width
@@ -105,7 +104,7 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
                         modifier = Modifier.fillMaxWidth()  // Ensure Row takes the full width
                     ) {
                         Text(
-                            text = size.value,
+                            text =  selected.value[apparel] ?: "Select Size",
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.weight(1f)  // Allow text to take up remaining space
                         )
@@ -124,8 +123,7 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
             {
              Text(text="Buy Now")
             }
-            if(showBottomSheet.value)
-            SelectSizeBottomSheet(size = size, sheetState = sheetState, showBottomSheet = showBottomSheet)
+            SelectSizeBottomSheet(sheetState = sheetState, showBottomSheet = showBottomSheet, selected = selected, apparel)
          }
        }
     }
@@ -133,13 +131,16 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectSizeBottomSheet(size: MutableState<String>, sheetState: SheetState, showBottomSheet: MutableState<Boolean>){
+fun SelectSizeBottomSheet(sheetState: SheetState, showBottomSheet: MutableState<Boolean>,
+                          selected:MutableState<MutableMap<Apparel,String>>, apparel: Apparel){
 
     val sizes = listOf("Small", "Medium", "Large")
+    val scope = rememberCoroutineScope()
 
+    if(showBottomSheet.value)
     ModalBottomSheet(
         sheetState=sheetState,
-        onDismissRequest = {!showBottomSheet.value}
+        onDismissRequest = {showBottomSheet.value=false}
     ){
         Column(
             modifier = Modifier
@@ -154,15 +155,20 @@ fun SelectSizeBottomSheet(size: MutableState<String>, sheetState: SheetState, sh
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            size.value=item_size
-                            showBottomSheet.value = !showBottomSheet.value
+                            val newMap = selected.value.toMutableMap()
+                            newMap[apparel] = item_size
+                            selected.value = newMap
+                            scope.launch {
+                                sheetState.hide()
+                            }.invokeOnCompletion {  if (!sheetState.isVisible) {
+                                showBottomSheet.value = false
+                            } }
                         }
                         .padding(16.dp)
                 )
             }
         }
     }
-
 }
 
 @SuppressLint("UnrememberedMutableState")
@@ -173,6 +179,6 @@ fun PreviewItemDetails(){
         val apparel = Apparel("men", "shirt", "100", "male", "2")
         val nav = rememberNavController()
         val title = mutableStateOf("")
-        ItemDetails(apparel,nav,title,mutableStateOf("hello"))
+        //ItemDetails(apparel,nav,title,mutableStateOf("hello"),mutableStateOf(mutableMapOf<Apparel,String>()))
     }
 }

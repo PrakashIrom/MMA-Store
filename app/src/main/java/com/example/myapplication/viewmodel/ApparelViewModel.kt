@@ -2,11 +2,7 @@ package com.example.myapplication.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.myapplication.ShopApplication
 import com.example.myapplication.api.APIService
 import com.example.myapplication.model.data.Apparel
 import kotlinx.coroutines.flow.MutableStateFlow

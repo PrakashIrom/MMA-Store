@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.absolutePadding
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -67,7 +66,7 @@ import kotlinx.coroutines.CoroutineScope
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
+fun NavigationDrawer(){
 
     val selectedCategory = remember { mutableStateOf(Screens.SHOP.name) }
     val title = remember{mutableStateOf("Home")}
@@ -77,6 +76,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
     val drawerState = rememberDrawerState(initialValue= DrawerValue.Closed)
     val search = remember{mutableStateOf("")}
     val size = remember{mutableStateOf("Select Size")}
+    val itemSelected = remember{ mutableStateOf(mutableMapOf<Apparel, String>()) }
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -200,7 +200,7 @@ fun NavigationDrawer(modifier: Modifier=Modifier.fillMaxSize()){
                 ){ backStackEntry ->
                     val apparelJson = backStackEntry.arguments?.getString("apparel")
                     val apparel = Gson().fromJson(apparelJson, Apparel::class.java)
-                    ItemDetails(apparel = apparel, navController = navController, title, size=size)
+                    ItemDetails(apparel = apparel, navController = navController, title, itemSelected)
                 }
                 composable(Screens.BAG.name){
                     BagScreen()
