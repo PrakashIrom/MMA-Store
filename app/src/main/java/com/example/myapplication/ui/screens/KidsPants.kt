@@ -94,7 +94,7 @@ fun ShowKidsPants(items: List<Apparel>, search: MutableState<String>, navControl
                     )
                     Spacer(modifier= Modifier.padding(3.dp))
                     Text(
-                        text = item.price,
+                        text = "$${item.price}",
                         color = Blue700,
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Normal,

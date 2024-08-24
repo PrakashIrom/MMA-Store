@@ -52,6 +52,8 @@ android {
 
 dependencies {
 
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
     //datastore
     implementation ("androidx.datastore:datastore-preferences:1.1.1")
     implementation ("androidx.datastore:datastore-core:1.1.1")

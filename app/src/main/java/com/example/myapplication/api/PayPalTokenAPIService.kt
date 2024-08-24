@@ -51,6 +51,7 @@ class CreateTokenApi(val clientId: String, val secretId: String) {
         .build()
 
     val retrofit: ApiTokenService by lazy { retrofitToken.create(ApiTokenService::class.java)
+
     }
 
 }

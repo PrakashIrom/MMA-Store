@@ -45,12 +45,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemDetails(apparel: Apparel, navController: NavHostController, title: MutableState<String>, selected:MutableState<MutableMap<Apparel,String>>){
+fun ItemDetails(apparel: Apparel, navController: NavHostController, title: MutableState<String>,
+                selected:MutableState<MutableMap<Apparel,String>>, ){
 
     title.value = apparel.name
     val sheetState = rememberModalBottomSheetState()
     val showBottomSheet = remember { mutableStateOf(false) }
-    val map = selected.value
 
     LazyColumn(){ item {
         Column( horizontalAlignment = Alignment.CenterHorizontally,
@@ -74,18 +74,19 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal
             )
-            when(apparel.gender){
-                Screens.WOMEN.name -> { Text(text = stringResource(id = R.string.woman)
-                , modifier = Modifier.padding(10.dp),
-                )}
+            when(apparel.gender)
+            {
+                Screens.WOMEN.name -> { Text(text = stringResource(id = R.string.woman),
+                    modifier = Modifier.padding(10.dp))
+                }
                 Screens.MEN.name -> { Text(text = stringResource(id = R.string.man)
                 , modifier = Modifier.padding(10.dp)
                 )}
-                else -> { Text(text = stringResource(id = R.string.kid),
-                    modifier = Modifier.padding(10.dp)
-                    )}
+                else -> {
+                    Text(text = stringResource(id = R.string.kid),
+                    modifier = Modifier.padding(10.dp))
+                }
             }
-
             Box(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)  // Add padding if needed
@@ -116,8 +117,12 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
                     }
                 }
             }
-            Button(onClick = { /*TODO*/ },
-                modifier = Modifier.fillMaxWidth()
+            Button(onClick =
+            {
+
+            },
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             )
             {
@@ -131,41 +136,45 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectSizeBottomSheet(sheetState: SheetState, showBottomSheet: MutableState<Boolean>,
-                          selected:MutableState<MutableMap<Apparel,String>>, apparel: Apparel){
+fun SelectSizeBottomSheet(sheetState: SheetState, showBottomSheet: MutableState<Boolean>,selected:MutableState<MutableMap<Apparel,String>>, apparel: Apparel){
 
     val sizes = listOf("Small", "Medium", "Large")
     val scope = rememberCoroutineScope()
 
-    if(showBottomSheet.value)
-    ModalBottomSheet(
-        sheetState=sheetState,
-        onDismissRequest = {showBottomSheet.value=false}
-    ){
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+    if(showBottomSheet.value) {
+        ModalBottomSheet(
+            sheetState = sheetState,
+            onDismissRequest = { showBottomSheet.value = false }
         ) {
-            sizes.forEach { item_size ->
-                Text(
-                    text = item_size,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            val newMap = selected.value.toMutableMap()
-                            newMap[apparel] = item_size
-                            selected.value = newMap
-                            scope.launch {
-                                sheetState.hide()
-                            }.invokeOnCompletion {  if (!sheetState.isVisible) {
-                                showBottomSheet.value = false
-                            } }
-                        }
-                        .padding(16.dp)
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                sizes.forEach { item_size ->
+                    Text(
+                        text = item_size,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                val newMap = selected.value.toMutableMap()
+                                newMap[apparel] = item_size
+                                selected.value = newMap
+                                scope
+                                    .launch {
+                                        sheetState.hide()
+                                    }
+                                    .invokeOnCompletion {
+                                        if (!sheetState.isVisible) {
+                                            showBottomSheet.value = false
+                                        }
+                                    }
+                            }
+                            .padding(16.dp)
+                    )
+                }
             }
         }
     }
@@ -179,6 +188,6 @@ fun PreviewItemDetails(){
         val apparel = Apparel("men", "shirt", "100", "male", "2")
         val nav = rememberNavController()
         val title = mutableStateOf("")
-        //ItemDetails(apparel,nav,title,mutableStateOf("hello"),mutableStateOf(mutableMapOf<Apparel,String>()))
+        ItemDetails(apparel,nav,title,mutableStateOf(mutableMapOf<Apparel,String>()))
     }
 }

@@ -12,6 +12,7 @@ class ClientSecretIDRepo(private val datastore: DataStore<Preferences>) {
     companion object{
         val CLIENT_ID = stringPreferencesKey("client_id")
         val SECRET_ID = stringPreferencesKey("secret_id")
+        val TOKEN_ID = stringPreferencesKey("token_id")
         val ORDER_ID = stringPreferencesKey("order_id")
     }
 
@@ -23,6 +24,13 @@ class ClientSecretIDRepo(private val datastore: DataStore<Preferences>) {
     val access_secret_id: Flow<String> = datastore.data.map{
         preferences ->
         preferences[SECRET_ID] ?: "Null"
+    }
+
+    suspend fun saveOrderId(id:OrderResponse){
+        datastore.edit{
+                preferences->
+            preferences[ORDER_ID] = id.id
+        }
     }
 
     val accessOrderId: Flow<String> = datastore.data.map{
@@ -38,11 +46,16 @@ class ClientSecretIDRepo(private val datastore: DataStore<Preferences>) {
         }
     }
 
-    suspend fun saveOrderId(id:OrderResponse){
+    suspend fun save_token_id(id:String){
         datastore.edit{
             preferences->
-            preferences[ORDER_ID] = id.id
+            preferences[TOKEN_ID] = id
         }
+    }
+
+    val access_token_id: Flow<String> = datastore.data.map{
+        preferences ->
+        preferences[TOKEN_ID] ?: "Null"
     }
 
 }

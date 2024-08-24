@@ -25,5 +25,4 @@ class ShopApplication: Application() {
         userPreference = DataContainer(datastore)
 
     }
-
 }

@@ -45,6 +45,13 @@ class TokenViewModel(private val userPreferences: DataContainer): ViewModel(){
         }
     }
 
+    fun saveAccessToken(token: String){
+        Log.d("Save Token", token)
+        viewModelScope.launch{
+            userPreferences.clientRepo.save_token_id(token)
+        }
+    }
+
     init{
         accessToken()
     }

@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.payment
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -15,11 +16,12 @@ import com.example.myapplication.viewmodel.TokenResponse
 fun Test(viewModel: TokenViewModel = viewModel(factory = TokenViewModel.Factory)){
 
     val state = viewModel._tokenResponse.collectAsState()
-    val response = state.value
 
-    when(response){
+    when(val response = state.value){
         is TokenResponse.Success ->{
-            Text(text="Success")
+            Text(text="Success:${response.token.access_token}")
+            Log.d("token",response.token.access_token)
+            viewModel.saveAccessToken(response.token.access_token)
         }
         is TokenResponse.Failure -> {
             Text(text="Failure")

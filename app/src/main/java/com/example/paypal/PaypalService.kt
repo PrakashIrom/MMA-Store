@@ -7,6 +7,7 @@ import com.paypal.android.corepayments.CoreConfig
 import com.paypal.android.corepayments.PayPalSDKError
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutListener
+import com.paypal.android.paypalwebpayments.PayPalWebCheckoutRequest
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutResult
 
 /*
@@ -24,6 +25,10 @@ class PaypalService : FragmentActivity() {
     val returnUrl = "my-paypal-scheme://return"
 
     lateinit var payPalWebCheckoutClient: PayPalWebCheckoutClient
+
+    fun payPalWebCheckoutTapped(payPalWebCheckoutRequest: PayPalWebCheckoutRequest) {
+        payPalWebCheckoutClient.start(payPalWebCheckoutRequest)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +60,6 @@ class PaypalService : FragmentActivity() {
                 // the user canceled the flow
             }
         }
-
     }
 
     //When your activity is launched with singleTop or singleTask launch modes, and a new intent for that activity arrives,

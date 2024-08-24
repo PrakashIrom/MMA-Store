@@ -10,6 +10,3 @@ data class Apparel(
         val gender: String,
         val quantity: String
     )
-
-//mutableMapOf<Apparel,Size>()
-//if the selected item is in the map then display text=map[apparel]

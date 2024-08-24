@@ -10,5 +10,5 @@ enum class Screens {
     SHOP,
     USER,
     DETAILS,
-    BAG
+    BAG,
 }

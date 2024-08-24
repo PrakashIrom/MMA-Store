@@ -75,7 +75,6 @@ fun NavigationDrawer(){
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue= DrawerValue.Closed)
     val search = remember{mutableStateOf("")}
-    val size = remember{mutableStateOf("Select Size")}
     val itemSelected = remember{ mutableStateOf(mutableMapOf<Apparel, String>()) }
 
     ModalNavigationDrawer(
