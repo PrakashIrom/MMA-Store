@@ -2,7 +2,10 @@ package com.example.paypal
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.viewmodel.OrderIDViewModel
 import com.paypal.android.corepayments.CoreConfig
 import com.paypal.android.corepayments.PayPalSDKError
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
@@ -18,13 +21,17 @@ onNewIntent allows you to handle this without restarting the activity.
 Data Processing: You can use the onNewIntent method to process the new intent data and continue the user flow seamlessly.
 */
 
-class PaypalService : FragmentActivity() {
+class PaypalService() : FragmentActivity() {
 
     private lateinit var config: CoreConfig
 
     val returnUrl = "my-paypal-scheme://return"
 
     lateinit var payPalWebCheckoutClient: PayPalWebCheckoutClient
+
+    private val viewModel: OrderIDViewModel by viewModels {
+        OrderIDViewModel.Factory
+    }
 
     fun payPalWebCheckoutTapped(payPalWebCheckoutRequest: PayPalWebCheckoutRequest) {
         payPalWebCheckoutClient.start(payPalWebCheckoutRequest)
@@ -51,7 +58,7 @@ class PaypalService : FragmentActivity() {
         payPalWebCheckoutClient.listener = object : PayPalWebCheckoutListener {
             override fun onPayPalWebSuccess(result: PayPalWebCheckoutResult)
             {
-                // order was approved and is ready to be captured/authorized (see step 7)
+                viewModel.authorizeOrder()
             }
             override fun onPayPalWebFailure(error: PayPalSDKError) {
                 // handle the error

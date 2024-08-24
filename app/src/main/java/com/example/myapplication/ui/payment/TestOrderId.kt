@@ -22,14 +22,19 @@ fun TestScreen(viewModel: OrderIDViewModel = viewModel(factory = OrderIDViewMode
     when(val response = state.value){
         is OrderState.Success -> {
             Text(text = response.orderResponse.id)
+            viewModel.saveOrderId(response.orderResponse.id)
             val payPalWebCheckoutRequest = PayPalWebCheckoutRequest(response.orderResponse.id, fundingSource = PayPalWebCheckoutFundingSource.PAYPAL)
-       // have to call the function for paypal request inside the viewModel class
+            viewModel.webCheckoutRequest(payPalWebCheckoutRequest)
         }
         is OrderState.Loading -> {
             Text(text = "Loading")
         }
         is OrderState.Error -> {
             Text(text = "Error")
+        }
+
+        OrderState.SuccessOrder -> {
+
         }
     }
 }

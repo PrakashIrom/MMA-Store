@@ -1,16 +1,20 @@
 package com.example.myapplication.ui.itemdetailscreen
 
 import android.annotation.SuppressLint
+import android.widget.LinearLayout
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -29,11 +33,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
@@ -41,6 +47,8 @@ import com.example.myapplication.R
 import com.example.myapplication.model.data.Apparel
 import com.example.myapplication.ui.navigationdrawer.Screens
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.paypal.android.paymentbuttons.PayPalButton
+import com.paypal.android.paymentbuttons.PaymentButtonShape
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,8 +104,8 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
                         showBottomSheet.value = true
                      },
                     modifier = Modifier
-                        .align(Alignment.Center)  // Center the button within the Box
-                        .fillMaxWidth()  // Button takes the full width
+                        .align(Alignment.Center)
+                        .fillMaxWidth()
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -117,21 +125,36 @@ fun ItemDetails(apparel: Apparel, navController: NavHostController, title: Mutab
                     }
                 }
             }
-            Button(onClick =
-            {
-
-            },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-            {
-             Text(text="Buy Now")
-            }
+            Spacer(modifier = Modifier.height(5.dp))
+            PayPalButtonView(onClick = {})
             SelectSizeBottomSheet(sheetState = sheetState, showBottomSheet = showBottomSheet, selected = selected, apparel)
          }
        }
     }
+}
+
+@Composable
+fun PayPalButtonView(onClick: () -> Unit) {
+
+    val context = LocalContext.current
+
+    AndroidView(
+        factory = { ctx ->
+            PayPalButton(ctx).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                setOnClickListener {
+                    onClick()
+                }
+                shape = PaymentButtonShape.PILL
+            }
+        },
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .height(38.dp)
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

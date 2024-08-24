@@ -12,7 +12,7 @@ import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-const val ORDERS_URL = "https://api-m.sandbox.paypal.com/v2/checkout/"
+const val ORDERID_URL = "https://api-m.sandbox.paypal.com/v2/checkout/"
 
 class CreateOrderId(private val token: String) {
 
@@ -43,7 +43,7 @@ class CreateOrderId(private val token: String) {
     }
 
     val orderIdRetrofit: Retrofit = Retrofit.Builder()
-        .baseUrl(ORDERS_URL)
+        .baseUrl(ORDERID_URL)
         .client(getHttpClient())
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .build()
