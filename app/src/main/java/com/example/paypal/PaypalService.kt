@@ -4,11 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.ui.payment.PaymentActivity
 import com.example.myapplication.viewmodel.OrderIDViewModel
 import com.paypal.android.corepayments.CoreConfig
 import com.paypal.android.corepayments.PayPalSDKError
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
+import com.paypal.android.paypalwebpayments.PayPalWebCheckoutFundingSource
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutListener
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutRequest
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutResult
@@ -25,20 +26,15 @@ class PaypalService() : FragmentActivity() {
 
     private lateinit var config: CoreConfig
 
-    val returnUrl = "my-paypal-scheme://return"
+    private val returnUrl = "my-paypal-scheme://return"
 
-    lateinit var payPalWebCheckoutClient: PayPalWebCheckoutClient
-
-    private val viewModel: OrderIDViewModel by viewModels {
-        OrderIDViewModel.Factory
-    }
-
-    fun payPalWebCheckoutTapped(payPalWebCheckoutRequest: PayPalWebCheckoutRequest) {
-        payPalWebCheckoutClient.start(payPalWebCheckoutRequest)
-    }
+    private lateinit var payPalWebCheckoutClient: PayPalWebCheckoutClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val orderId = intent.getStringExtra("orderId")?:""
+
         config = CoreConfig(
 
             //Authentication: It acts as a credential that allows your app to communicate securely with PayPal’s servers.
@@ -58,7 +54,8 @@ class PaypalService() : FragmentActivity() {
         payPalWebCheckoutClient.listener = object : PayPalWebCheckoutListener {
             override fun onPayPalWebSuccess(result: PayPalWebCheckoutResult)
             {
-                viewModel.authorizeOrder()
+                val intent = Intent(this@PaypalService, PaymentActivity::class.java)
+                startActivity(intent)
             }
             override fun onPayPalWebFailure(error: PayPalSDKError) {
                 // handle the error
@@ -67,17 +64,20 @@ class PaypalService() : FragmentActivity() {
                 // the user canceled the flow
             }
         }
+
+        val payPalWebCheckoutRequest = PayPalWebCheckoutRequest(orderId, fundingSource = PayPalWebCheckoutFundingSource.PAYPAL)
+        payPalWebCheckoutClient.start(payPalWebCheckoutRequest)
+
     }
+
 
     //When your activity is launched with singleTop or singleTask launch modes, and a new intent for that activity arrives,
     // onNewIntent() is called instead of creating a new instance of the activity.
     //When PayPal redirects the user back to your app after the web checkout, it uses a deep link to launch your activity
     // (or bring it to the foreground). The onNewIntent() function is where you would handle this deep link, extract the payment
     // result from the newIntent, and proceed accordingly (e.g., show a success message, update the order status, etc.).
-
-    override fun onNewIntent(newIntent: Intent)
-    {
-        super.onNewIntent(newIntent)
+    override fun onNewIntent(newIntent: Intent) {
+        super.onNewIntent(intent)
         intent = newIntent
     }
 

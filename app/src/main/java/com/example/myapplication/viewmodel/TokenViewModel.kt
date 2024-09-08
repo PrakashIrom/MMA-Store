@@ -28,7 +28,7 @@ class TokenViewModel(private val userPreferences: DataContainer): ViewModel(){
     private val tokenResponse = MutableStateFlow<TokenResponse>(TokenResponse.Loading)
     val _tokenResponse: StateFlow<TokenResponse> = tokenResponse
 
-    private fun accessToken(){
+     fun accessToken(){
         viewModelScope.launch{
             tokenResponse.value = try{
                 val dataId = ClientSecretId()
@@ -50,10 +50,6 @@ class TokenViewModel(private val userPreferences: DataContainer): ViewModel(){
         viewModelScope.launch{
             userPreferences.clientRepo.save_token_id(token)
         }
-    }
-
-    init{
-        accessToken()
     }
 
     companion object{

@@ -64,7 +64,7 @@ import com.example.myapplication.ui.topbar.ShopTopBar
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "MutableCollectionMutableState")
 @Composable
 fun NavigationDrawer(){
 
@@ -233,5 +233,4 @@ fun TopBar(drawerState: DrawerState, title: MutableState<String>, currentDestina
             CommonTopBar(navController, title) //for item details screen
         }
     }
-
 }

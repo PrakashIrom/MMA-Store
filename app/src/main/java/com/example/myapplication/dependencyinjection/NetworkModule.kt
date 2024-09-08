@@ -13,6 +13,7 @@ import retrofit2.Retrofit
 
 
 val apiModule = module{
+
     single{
          Retrofit
             .Builder()

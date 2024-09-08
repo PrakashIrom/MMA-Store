@@ -15,8 +15,6 @@ import com.example.myapplication.model.data.DataContainer
 import com.example.myapplication.model.data.OrderResponse
 import com.example.myapplication.model.data.PayPalOrderRequest
 import com.example.myapplication.model.data.PurchaseUnit
-import com.example.paypal.PaypalService
-import com.paypal.android.paypalwebpayments.PayPalWebCheckoutRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -26,9 +24,7 @@ sealed interface OrderState{
     data class Success(val orderResponse: OrderResponse): OrderState
     object Loading: OrderState
     object Error: OrderState
-
     object SuccessOrder: OrderState
-
 }
 class OrderIDViewModel(private val userPreferences: DataContainer): ViewModel() {
 
@@ -45,6 +41,7 @@ class OrderIDViewModel(private val userPreferences: DataContainer): ViewModel() 
             _orderState.value = try{
                 val token = userPreferences.clientRepo.access_token_id.first()
                 val response = CreateOrderId(token).retrofitService.getOrderId(orderRequest)
+                Log.d("Order Response", response.toString())
                 OrderState.Success(response)
             }
             catch(e: Exception){
@@ -58,11 +55,6 @@ class OrderIDViewModel(private val userPreferences: DataContainer): ViewModel() 
         viewModelScope.launch {
             userPreferences.clientRepo.saveOrderId(orderId)
         }
-    }
-
-    fun webCheckoutRequest(checkoutRequest: PayPalWebCheckoutRequest){
-         val paypalService = PaypalService()
-        paypalService.payPalWebCheckoutTapped(checkoutRequest)
     }
 
     fun authorizeOrder(){
